@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Sito dark luxury per tatuatore, costruito con [Next.js](https://nextjs.org) + Tailwind.
 
-## Getting Started
+## Avvio rapido
 
-First, run the development server:
+1. Installa dipendenze
+
+```bash
+npm install
+```
+
+2. Avvia in locale
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Apri `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Contenuti (immagini/video)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Media (portfolio + video) stanno in `content/media.json`.
+- Immagini in `public/portfolio/`
+- Poster video in `public/video-posters/`
+- (Opzionale) Video in `public/videos/` se vuoi servire MP4 localmente.
 
-## Learn More
+Nota: per demo i video puntano a MP4 esterni, sostituiscili con i tuoi file in produzione.
 
-To learn more about Next.js, take a look at the following resources:
+## Pannello admin (upload)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Visita `http://localhost:3000/admin` per caricare:
+- Immagini portfolio (jpg/png/webp)
+- Video (mp4) + poster (jpg/png)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+L’admin salva i file dentro `public/` e aggiorna automaticamente `content/media.json`.
 
-## Deploy on Vercel
+Importante:
+- Proteggi `/admin` in produzione (auth).
+- Se deploy su serverless (es. Vercel) lo storage locale non è persistente: usa S3/R2 o un headless CMS.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Branding e SEO
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Logo: sostituisci `public/logo.svg` con il tuo.
+- Hero: `public/hero/hero.jpg`
+- About: `public/about/about.jpg`
+- Metadati: `app/layout.tsx` (imposta `metadataBase` con il tuo dominio).
+
+## Build produzione
+
+```bash
+npm run build
+npm run start
+```

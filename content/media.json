@@ -1,0 +1,89 @@
+{
+  "portfolioImages": [
+    {
+      "id": "p01",
+      "src": "/portfolio/p01.jpg",
+      "alt": "Tatuaggio blackwork con simbolo sacrale",
+      "style": "blackwork",
+      "date": "2026-05-12"
+    },
+    {
+      "id": "p02",
+      "src": "/portfolio/p02.jpg",
+      "alt": "Tatuaggio realistico: dettaglio ombre e texture",
+      "style": "realistic",
+      "date": "2026-05-02"
+    },
+    {
+      "id": "p03",
+      "src": "/portfolio/p03.jpg",
+      "alt": "Ornamental su avambraccio, linee e pattern",
+      "style": "ornamental",
+      "date": "2026-04-19"
+    },
+    {
+      "id": "p04",
+      "src": "/portfolio/p04.jpg",
+      "alt": "Lettering minimal premium",
+      "style": "lettering",
+      "date": "2026-04-01"
+    },
+    {
+      "id": "p05",
+      "src": "/portfolio/p05.jpg",
+      "alt": "Cover-up con contrasto elevato",
+      "style": "coverup",
+      "date": "2026-03-22"
+    },
+    {
+      "id": "p06",
+      "src": "/portfolio/p06.jpg",
+      "alt": "Dettaglio blackwork con texture opaca",
+      "style": "blackwork",
+      "date": "2026-03-10"
+    },
+    {
+      "id": "p07",
+      "src": "/portfolio/p07.jpg",
+      "alt": "Tatuaggio realistico in close-up",
+      "style": "realistic",
+      "date": "2026-02-27"
+    },
+    {
+      "id": "p08",
+      "src": "/portfolio/p08.jpg",
+      "alt": "Ornamental: geometria e simmetria",
+      "style": "ornamental",
+      "date": "2026-02-05"
+    }
+  ],
+  "videos": [
+    {
+      "id": "v01",
+      "src": "",
+      "poster": "/video-posters/v01.jpg",
+      "title": "Linework preciso (close-up)",
+      "duration": "00:24",
+      "orientation": "horizontal",
+      "date": "2026-05-18"
+    },
+    {
+      "id": "v02",
+      "src": "",
+      "poster": "/video-posters/v02.jpg",
+      "title": "Shading: profondità e texture",
+      "duration": "00:31",
+      "orientation": "horizontal",
+      "date": "2026-05-05"
+    },
+    {
+      "id": "v03",
+      "src": "",
+      "poster": "/video-posters/v03.jpg",
+      "title": "Reel verticale: dettaglio blackwork",
+      "duration": "00:18",
+      "orientation": "vertical",
+      "date": "2026-04-16"
+    }
+  ]
+}
