@@ -24,7 +24,7 @@ export function Button({
   ariaLabel,
 }: Props) {
   const base =
-    "inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-medium tracking-wide transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:opacity-60 disabled:pointer-events-none";
+    "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-4 py-3.5 text-[13px] sm:px-5 sm:py-3 text-center leading-none font-medium tracking-wide whitespace-nowrap transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:opacity-60 disabled:pointer-events-none";
 
   const variants: Record<NonNullable<Props["variant"]>, string> = {
     primary:

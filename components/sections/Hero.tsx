@@ -18,16 +18,16 @@ export function Hero() {
       </div>
 
       <div className="relative">
-        <div className="mx-auto max-w-6xl px-5 sm:px-6 pt-36 pb-24 sm:pt-44 sm:pb-32">
+        <div className="mx-auto max-w-6xl px-5 sm:px-6 pt-32 pb-20 sm:pt-44 sm:pb-32">
           <div className="max-w-3xl">
-            <h1 className="text-4xl sm:text-6xl font-semibold tracking-tight text-white leading-[1.05]">
+            <h1 className="max-w-[10ch] text-[2.35rem] sm:text-6xl font-semibold tracking-tight text-white leading-[0.98] sm:leading-[1.05]">
               Arte sulla pelle.
               <span className="block text-white/80">
                 Nero, luce, rito contemporaneo.
               </span>
             </h1>
 
-            <p className="mt-6 text-base sm:text-lg text-white/70 leading-relaxed max-w-2xl">
+            <p className="mt-5 max-w-xl text-[15px] sm:text-lg text-white/70 leading-relaxed">
               {site.tagline}
             </p>
 
@@ -36,18 +36,19 @@ export function Hero() {
                 href={site.contacts.whatsappUrl}
                 target="_blank"
                 rel="noreferrer"
+                className="w-full sm:w-auto"
               >
                 {site.ctaPrimary}
               </Button>
-              <Button href="#portfolio" variant="secondary">
+              <Button href="#portfolio" variant="secondary" className="w-full sm:w-auto">
                 {site.ctaSecondary}
               </Button>
-              <Button href="#contatti" variant="ghost">
+              <Button href="#contatti" variant="ghost" className="w-full sm:w-auto">
                 {site.ctaTertiary}
               </Button>
             </div>
 
-            <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl">
+            <div className="mt-10 grid grid-cols-1 min-[430px]:grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl">
               {[
                 { k: "Igiene", v: "Protocollo studio" },
                 { k: "Design", v: "Progetto su misura" },

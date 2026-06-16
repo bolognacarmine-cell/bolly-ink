@@ -37,8 +37,13 @@ export function Contact() {
             </p>
           </div>
 
-          <div className="flex gap-2">
-            <Button href={site.contacts.whatsappUrl} target="_blank" rel="noreferrer">
+          <div className="grid w-full grid-cols-1 gap-2 sm:w-auto sm:grid-cols-3 lg:flex">
+            <Button
+              href={site.contacts.whatsappUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="w-full"
+            >
               WhatsApp
             </Button>
             <Button
@@ -46,6 +51,7 @@ export function Contact() {
               target="_blank"
               rel="noreferrer"
               variant="secondary"
+              className="w-full"
             >
               Instagram
             </Button>
@@ -54,6 +60,7 @@ export function Contact() {
               target="_blank"
               rel="noreferrer"
               variant="ghost"
+              className="w-full"
             >
               TikTok
             </Button>
@@ -109,7 +116,7 @@ export function Contact() {
                 In produzione collega il form a un provider (Formspree, Resend,
                 endpoint API) o sostituisci la logica mailto.
               </p>
-              <Button ariaLabel="Invia richiesta via email" href={mailto}>
+              <Button ariaLabel="Invia richiesta via email" href={mailto} className="w-full sm:w-auto">
                 Invia richiesta
               </Button>
             </div>

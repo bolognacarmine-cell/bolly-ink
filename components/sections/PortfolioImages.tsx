@@ -58,13 +58,13 @@ export function PortfolioImages({ images }: Props) {
           </div>
 
           <div className="flex flex-col items-start gap-3 sm:items-end">
-            <div className="flex flex-wrap gap-2">
+            <div className="-mx-1 flex w-[calc(100%+0.5rem)] gap-2 overflow-x-auto px-1 pb-1 sm:w-auto sm:flex-wrap sm:overflow-visible sm:px-0">
               {styles.map((s) => (
                 <button
                   key={s}
                   onClick={() => setStyle(s)}
                   className={cn(
-                    "rounded-full border px-4 py-2 text-xs uppercase tracking-[0.20em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
+                    "shrink-0 rounded-full border px-4 py-2.5 text-xs uppercase tracking-[0.20em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
                     style === s
                       ? "border-white/30 bg-white/10 text-white"
                       : "border-white/10 bg-black/20 text-white/60 hover:text-white hover:bg-white/5",
@@ -74,11 +74,11 @@ export function PortfolioImages({ images }: Props) {
                 </button>
               ))}
             </div>
-            <div className="flex gap-2">
+            <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto">
               <button
                 onClick={() => setSort("newest")}
                 className={cn(
-                  "rounded-full border px-4 py-2 text-xs transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
+                  "rounded-full border px-4 py-2.5 text-xs transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
                   sort === "newest"
                     ? "border-white/25 bg-white/10 text-white"
                     : "border-white/10 bg-black/20 text-white/60 hover:text-white hover:bg-white/5",
@@ -89,7 +89,7 @@ export function PortfolioImages({ images }: Props) {
               <button
                 onClick={() => setSort("oldest")}
                 className={cn(
-                  "rounded-full border px-4 py-2 text-xs transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
+                  "rounded-full border px-4 py-2.5 text-xs transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
                   sort === "oldest"
                     ? "border-white/25 bg-white/10 text-white"
                     : "border-white/10 bg-black/20 text-white/60 hover:text-white hover:bg-white/5",
@@ -103,7 +103,7 @@ export function PortfolioImages({ images }: Props) {
       </Reveal>
 
       <div className="mt-12">
-        <div className="columns-2 sm:columns-3 lg:columns-4 gap-4 [column-fill:_balance]">
+        <div className="columns-1 min-[430px]:columns-2 sm:columns-3 lg:columns-4 gap-4 [column-fill:_balance]">
           {items.map((img, idx) => (
             <div key={img.id} className="mb-4 break-inside-avoid">
               <Reveal>
