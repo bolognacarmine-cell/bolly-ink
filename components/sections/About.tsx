@@ -51,7 +51,7 @@ export function About() {
             <div className="absolute inset-0 opacity-40 mix-blend-overlay bg-noise" />
             <div className="relative aspect-[4/5]">
               <Image
-                src="/about/about.jpg"
+                src="/about/chritatto.webp"
                 alt="Ritratto artista tattoo"
                 fill
                 sizes="(max-width: 1024px) 92vw, 520px"
