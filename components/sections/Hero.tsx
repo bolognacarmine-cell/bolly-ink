@@ -1,8 +1,35 @@
+'use client';
+
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { site } from "@/data/site";
+import { use3DTilt } from "@/hooks/use3DTilt";
+import { useEffect, useState } from "react";
 
 export function Hero() {
+  const { ref, rotateX, rotateY, handleMouseMove, handleMouseEnter, handleMouseLeave } = use3DTilt({
+    maxRotation: 6
+  });
+
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+    
+    const handleChange = (e: MediaQueryListEvent) => {
+      setPrefersReducedMotion(e.matches);
+    };
+    
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
   return (
     <section id="top" className="relative overflow-hidden">
       <div className="absolute inset-0">
@@ -14,24 +41,56 @@ export function Hero() {
           fill
           priority
           className="object-cover object-center brightness-[0.55] contrast-125 saturate-75"
+          style={{ 
+            transform: prefersReducedMotion ? 'none' : 'scale(1.05)',
+            transition: 'transform 0.8s ease-out'
+          }}
         />
       </div>
 
-      <div className="relative">
-        <div className="mx-auto max-w-6xl px-5 sm:px-6 pt-32 pb-20 sm:pt-44 sm:pb-32">
+      <div 
+        ref={ref}
+        className="relative"
+        style={{ perspective: '1200px' }}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div 
+          className="mx-auto max-w-6xl px-5 sm:px-6 pt-32 pb-20 sm:pt-44 sm:pb-32"
+          style={{
+            transformStyle: 'preserve-3d',
+            transform: prefersReducedMotion 
+              ? `translateY(${isVisible ? 0 : 30}px)` 
+              : `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${isVisible ? 0 : 30}px)`,
+            transition: prefersReducedMotion 
+              ? 'transform 0.8s ease-out, opacity 0.8s ease-out'
+              : 'transform 0.15s ease-out, opacity 0.8s ease-out',
+            opacity: isVisible ? 1 : 0
+          }}
+        >
           <div className="max-w-3xl">
-            <h1 className="max-w-[10ch] text-[2.35rem] sm:text-6xl font-semibold tracking-tight text-white leading-[0.98] sm:leading-[1.05]">
+            <h1 
+              className="max-w-[10ch] text-[2.35rem] sm:text-6xl font-semibold tracking-tight text-white leading-[0.98] sm:leading-[1.05]"
+              style={{ transform: 'translateZ(20px)' }}
+            >
               Arte sulla pelle.
               <span className="block text-white/80">
                 Nero, luce, rito contemporaneo.
               </span>
             </h1>
 
-            <p className="mt-5 max-w-xl text-[15px] sm:text-lg text-white/70 leading-relaxed">
+            <p 
+              className="mt-5 max-w-xl text-[15px] sm:text-lg text-white/70 leading-relaxed"
+              style={{ transform: 'translateZ(15px)' }}
+            >
               {site.tagline}
             </p>
 
-            <div className="mt-10 flex flex-col sm:flex-row gap-3">
+            <div 
+              className="mt-10 flex flex-col sm:flex-row gap-3"
+              style={{ transform: 'translateZ(25px)' }}
+            >
               <Button
                 href={site.contacts.whatsappUrl}
                 target="_blank"
@@ -48,7 +107,10 @@ export function Hero() {
               </Button>
             </div>
 
-            <div className="mt-10 grid grid-cols-1 min-[430px]:grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl">
+            <div 
+              className="mt-10 grid grid-cols-1 min-[430px]:grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl"
+              style={{ transform: 'translateZ(10px)' }}
+            >
               {[
                 { k: "Igiene", v: "Protocollo studio" },
                 { k: "Design", v: "Progetto su misura" },
@@ -58,6 +120,7 @@ export function Hero() {
                 <div
                   key={item.k}
                   className="rounded-2xl border border-white/10 bg-black/40 backdrop-blur-md px-4 py-4"
+                  style={{ transform: 'translateZ(5px)' }}
                 >
                   <p className="text-sm font-semibold text-white">{item.k}</p>
                   <p className="mt-1 text-xs text-white/60">{item.v}</p>

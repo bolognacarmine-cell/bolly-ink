@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Section } from "@/components/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { Lightbox } from "@/components/ui/Lightbox";
+import { Card3D } from "@/components/ui/Card3D";
 import { cn } from "@/lib/utils";
 import type { PortfolioImage } from "@/data/site";
 
@@ -23,6 +24,14 @@ export function PortfolioImages({ images }: Props) {
   const [style, setStyle] = useState<string>("all");
   const [sort, setSort] = useState<SortMode>("newest");
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const items = useMemo(() => {
     const filtered =
@@ -107,29 +116,38 @@ export function PortfolioImages({ images }: Props) {
           {items.map((img, idx) => (
             <div key={img.id} className="mb-4 break-inside-avoid">
               <Reveal>
-                <button
-                  onClick={() => setOpenIndex(idx)}
-                  className="group relative w-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-[0_22px_70px_-50px_rgba(255,255,255,.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
-                  aria-label={`Apri immagine: ${img.style}`}
-                >
-                  <div className="relative aspect-[4/5] w-full">
-                    <Image
-                      src={img.src}
-                      alt={img.alt}
-                      fill
-                      sizes="(max-width: 640px) 48vw, (max-width: 1024px) 30vw, 22vw"
-                      className="object-cover transition duration-500 group-hover:scale-[1.03] group-hover:brightness-[1.08]"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-gradient-to-t from-black/65 via-black/0 to-black/0" />
-                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition">
-                      <p className="text-xs uppercase tracking-[0.20em] text-white/80">
-                        {img.style}
-                      </p>
-                      <p className="mt-1 text-xs text-white/65">{img.date}</p>
+                <Card3D depth="shallow" disabled={isMobile} className="w-full">
+                  <button
+                    onClick={() => setOpenIndex(idx)}
+                    className="group relative w-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-[0_22px_70px_-50px_rgba(255,255,255,.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                    aria-label={`Apri immagine: ${img.style}`}
+                  >
+                    <div className="relative aspect-[4/5] w-full">
+                      <Image
+                        src={img.src}
+                        alt={img.alt}
+                        fill
+                        sizes="(max-width: 640px) 48vw, (max-width: 1024px) 30vw, 22vw"
+                        className="object-cover transition duration-500 group-hover:scale-[1.03] group-hover:brightness-[1.08]"
+                        loading="lazy"
+                        style={{ transform: 'translateZ(5px)' }}
+                      />
+                      <div 
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-gradient-to-t from-black/65 via-black/0 to-black/0"
+                        style={{ transform: 'translateZ(8px)' }}
+                      />
+                      <div 
+                        className="pointer-events-none absolute bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition"
+                        style={{ transform: 'translateZ(10px)' }}
+                      >
+                        <p className="text-xs uppercase tracking-[0.20em] text-white/80">
+                          {img.style}
+                        </p>
+                        <p className="mt-1 text-xs text-white/65">{img.date}</p>
+                      </div>
                     </div>
-                  </div>
-                </button>
+                  </button>
+                </Card3D>
               </Reveal>
             </div>
           ))}

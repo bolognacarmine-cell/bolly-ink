@@ -1,7 +1,7 @@
 import { Header } from "@/components/Header";
 import { StickyCTA } from "@/components/StickyCTA";
 import { Footer } from "@/components/Footer";
-import ImmersiveHero from "@/components/ImmersiveHero";
+import { Hero } from "@/components/sections/Hero";
 import { Services } from "@/components/sections/Services";
 import { PortfolioImages } from "@/components/sections/PortfolioImages";
 import { VideoGallery } from "@/components/sections/VideoGallery";
@@ -29,7 +29,7 @@ export default async function Home() {
       <Header />
       <StickyCTA />
       <main>
-        <ImmersiveHero />
+        <Hero />
         <Services />
         <PortfolioImages images={media.portfolioImages} />
         <VideoGallery videos={media.videos} />
