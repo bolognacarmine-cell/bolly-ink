@@ -65,7 +65,7 @@ export default function ImmersiveHero() {
     const newRotateX = -(mouseY / (rect.height / 2)) * maxRotation;
 
     // Use requestAnimationFrame for smooth animation
-    if (animationFrameRef.current) {
+    if (animationFrameRef.current !== undefined) {
       cancelAnimationFrame(animationFrameRef.current);
     }
 
@@ -80,7 +80,7 @@ export default function ImmersiveHero() {
     
     setIsHovered(false);
     
-    if (animationFrameRef.current) {
+    if (animationFrameRef.current !== undefined) {
       cancelAnimationFrame(animationFrameRef.current);
     }
 
@@ -100,7 +100,7 @@ export default function ImmersiveHero() {
   // Cleanup animation frame on unmount
   useEffect(() => {
     return () => {
-      if (animationFrameRef.current) {
+      if (animationFrameRef.current !== undefined) {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
