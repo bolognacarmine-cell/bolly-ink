@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { site } from "@/data/site";
 import { use3DTilt } from "@/hooks/use3DTilt";
+import { Hero3D } from "@/components/Hero3D";
 import { useEffect, useState } from "react";
 
 export function Hero() {
@@ -13,6 +14,7 @@ export function Hero() {
 
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -22,8 +24,16 @@ export function Hero() {
       setPrefersReducedMotion(e.matches);
     };
     
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    
     mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
+    window.addEventListener('resize', checkMobile);
+    checkMobile();
+    
+    return () => {
+      mediaQuery.removeEventListener('change', handleChange);
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
 
   useEffect(() => {
@@ -31,18 +41,22 @@ export function Hero() {
   }, []);
 
   return (
-    <section id="top" className="relative overflow-hidden">
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(1200px_circle_at_20%_10%,rgba(255,255,255,.10),transparent_55%),radial-gradient(900px_circle_at_70%_35%,rgba(255,255,255,.08),transparent_60%),linear-gradient(to_bottom,rgba(0,0,0,.30),rgba(0,0,0,.85),rgba(0,0,0,1))]" />
-        <div className="absolute inset-0 opacity-45 mix-blend-overlay bg-noise" />
+    <section id="top" className="relative overflow-hidden min-h-screen">
+      {/* 3D WebGL Scene - behind everything */}
+      <Hero3D className="z-0" />
+      
+      {/* Original background with reduced opacity for depth layering */}
+      <div className="absolute inset-0 z-10">
+        <div className="absolute inset-0 bg-[radial-gradient(1200px_circle_at_20%_10%,rgba(255,255,255,.05),transparent_55%),radial-gradient(900px_circle_at_70%_35%,rgba(255,255,255,.03),transparent_60%),linear-gradient(to_bottom,rgba(0,0,0,.40),rgba(0,0,0,.90),rgba(0,0,0,1))]" />
+        <div className="absolute inset-0 opacity-30 mix-blend-overlay bg-noise" />
         <Image
           src="/hero/hero.jpg"
           alt="Studio tattoo: hero background"
           fill
           priority
-          className="object-cover object-center brightness-[0.55] contrast-125 saturate-75"
+          className="object-cover object-center brightness-[0.45] contrast-120 saturate-70 opacity-60"
           style={{ 
-            transform: prefersReducedMotion ? 'none' : 'scale(1.05)',
+            transform: prefersReducedMotion ? 'none' : 'scale(1.02)',
             transition: 'transform 0.8s ease-out'
           }}
         />
@@ -50,7 +64,7 @@ export function Hero() {
 
       <div 
         ref={ref}
-        className="relative"
+        className="relative z-20"
         style={{ perspective: '1200px' }}
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
