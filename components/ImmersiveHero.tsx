@@ -9,7 +9,7 @@ export default function ImmersiveHero() {
   const [rotateY, setRotateY] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  const animationFrameRef = useRef<number>();
+  const animationFrameRef = useRef<number | null>(null);
 
   // Check for prefers-reduced-motion
   useEffect(() => {
@@ -65,8 +65,8 @@ export default function ImmersiveHero() {
     const newRotateX = -(mouseY / (rect.height / 2)) * maxRotation;
 
     // Use requestAnimationFrame for smooth animation
-    if (animationFrameRef.current !== undefined) {
-      cancelAnimationFrame(animationFrameRef.current);
+    if (animationFrameRef.current !== null) {
+      cancelAnimationFrame(animationFrameRef.current!);
     }
 
     animationFrameRef.current = requestAnimationFrame(() => {
@@ -80,8 +80,8 @@ export default function ImmersiveHero() {
     
     setIsHovered(false);
     
-    if (animationFrameRef.current !== undefined) {
-      cancelAnimationFrame(animationFrameRef.current);
+    if (animationFrameRef.current !== null) {
+      cancelAnimationFrame(animationFrameRef.current!);
     }
 
     // Smooth return to center position
@@ -100,8 +100,8 @@ export default function ImmersiveHero() {
   // Cleanup animation frame on unmount
   useEffect(() => {
     return () => {
-      if (animationFrameRef.current !== undefined) {
-        cancelAnimationFrame(animationFrameRef.current);
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current!);
       }
     };
   }, []);
