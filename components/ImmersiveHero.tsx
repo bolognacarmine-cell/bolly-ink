@@ -120,23 +120,22 @@ export default function ImmersiveHero() {
           {/* Hero Content */}
           <div className="heroContent text-center lg:text-left order-2 lg:order-1">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 leading-tight">
-              Esperienze Web
+              Bolly Ink
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
-                Immersive in 3D
+                Studio
               </span>
             </h1>
             
             <p className="text-lg sm:text-xl text-gray-300 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-              Trasformiamo le tue idee in esperienze digitali coinvolgenti. 
-              Design moderno, performance ottimizzate e animazioni fluide.
+              Tatuaggi personalizzati, linee pulite e progetti su misura pensati intorno alla tua idea.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <button className="ctaPrimary px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/25 hover:scale-105">
-                Inizia Ora
+                Prenota una consulenza
               </button>
               <button className="ctaSecondary px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition-all duration-300 hover:border-white/50">
-                Scopri di Più
+                Guarda i lavori
               </button>
             </div>
           </div>
