@@ -155,12 +155,9 @@ export default function ImmersiveHero() {
               style={{
                 transformStyle: 'preserve-3d',
                 transform: prefersReducedMotion 
-                  ? 'none' 
-                  : `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
-                opacity: isVisible ? 1 : 0,
-                transform: prefersReducedMotion
-                  ? `translateY(${isVisible ? 0 : 30}px)`
+                  ? `translateY(${isVisible ? 0 : 30}px)` 
                   : `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${isVisible ? 0 : 30}px)`,
+                opacity: isVisible ? 1 : 0,
                 transition: prefersReducedMotion 
                   ? 'opacity 0.6s ease-out, transform 0.6s ease-out'
                   : 'transform 0.1s ease-out, opacity 0.6s ease-out'
