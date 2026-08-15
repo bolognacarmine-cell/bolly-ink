@@ -56,7 +56,7 @@ export function Hero() {
           alt="Studio tattoo: hero background"
           fill
           priority
-          className="object-cover object-center brightness-[0.45] contrast-120 saturate-70 opacity-30"
+          className="object-cover object-center brightness-[0.65] contrast-110 saturate-80 opacity-50"
           style={{ 
             transform: prefersReducedMotion ? 'none' : 'scale(1.02)',
             transition: 'transform 0.8s ease-out'
