@@ -45,11 +45,11 @@ export function Hero() {
 
   return (
     <section id="top" className="relative overflow-hidden min-h-screen">
-      {/* 3D WebGL Scene - behind everything */}
-      <Hero3D className="z-0" />
+      {/* 3D WebGL Scene - visible behind content */}
+      <Hero3D className="z-10" />
       
       {/* Original background with reduced opacity for depth layering */}
-      <div className="absolute inset-0 z-10">
+      <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(1200px_circle_at_20%_10%,rgba(255,255,255,.05),transparent_55%),radial-gradient(900px_circle_at_70%_35%,rgba(255,255,255,.03),transparent_60%),linear-gradient(to_bottom,rgba(0,0,0,.40),rgba(0,0,0,.90),rgba(0,0,0,1))]" />
         <div className="absolute inset-0 opacity-30 mix-blend-overlay bg-noise" />
         <Image
@@ -57,7 +57,7 @@ export function Hero() {
           alt="Studio tattoo: hero background"
           fill
           priority
-          className="object-cover object-center brightness-[0.45] contrast-120 saturate-70 opacity-60"
+          className="object-cover object-center brightness-[0.45] contrast-120 saturate-70 opacity-30"
           style={{ 
             transform: prefersReducedMotion ? 'none' : 'scale(1.02)',
             transition: 'transform 0.8s ease-out'

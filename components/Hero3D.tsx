@@ -181,8 +181,8 @@ export function Hero3D({ className }: Hero3DProps) {
       detail.position.x = 2.1;
       needleGroup.add(detail);
 
-      // Scale the needle for visibility
-      needleGroup.scale.set(1.5, 1.5, 1.5);
+      // Scale the needle for visibility (35-50% of visual area)
+      needleGroup.scale.set(2.5, 2.5, 2.5);
       scene3D.add(needleGroup);
 
       // Create ink filaments (only if not low-end)
