@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { site } from "@/data/site";
 import { use3DTilt } from "@/hooks/use3DTilt";
-import { Hero3D } from "@/components/Hero3D";
+import { ImmersiveExperience } from "@/components/immersive/ImmersiveExperience";
 import { useEffect, useState } from "react";
 
 export function Hero() {
@@ -19,37 +19,36 @@ export function Hero() {
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
+    
+    requestAnimationFrame(() => {
+      setPrefersReducedMotion(mediaQuery.matches);
+    });
     
     const handleChange = (e: MediaQueryListEvent) => {
-      setPrefersReducedMotion(e.matches);
+      requestAnimationFrame(() => {
+        setPrefersReducedMotion(e.matches);
+      });
     };
-    
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
     
     mediaQuery.addEventListener('change', handleChange);
-    window.addEventListener('resize', checkMobile);
-    checkMobile();
-    
-    return () => {
-      mediaQuery.removeEventListener('change', handleChange);
-      window.removeEventListener('resize', checkMobile);
-    };
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
   useEffect(() => {
-    setIsVisible(true);
+    requestAnimationFrame(() => {
+      setIsVisible(true);
+    });
     // Stagger hero content loading
     setTimeout(() => setHeroLoaded(true), 300);
   }, []);
 
   return (
     <section id="top" className="relative overflow-hidden min-h-screen">
-      {/* 3D WebGL Scene - behind everything */}
-      <Hero3D className="z-0" />
+      {/* 3D WebGL Scene - visible behind content */}
+      <ImmersiveExperience className="z-10" />
       
       {/* Original background with reduced opacity for depth layering */}
-      <div className="absolute inset-0 z-10">
+      <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(1200px_circle_at_20%_10%,rgba(255,255,255,.05),transparent_55%),radial-gradient(900px_circle_at_70%_35%,rgba(255,255,255,.03),transparent_60%),linear-gradient(to_bottom,rgba(0,0,0,.40),rgba(0,0,0,.90),rgba(0,0,0,1))]" />
         <div className="absolute inset-0 opacity-30 mix-blend-overlay bg-noise" />
         <Image
@@ -57,7 +56,7 @@ export function Hero() {
           alt="Studio tattoo: hero background"
           fill
           priority
-          className="object-cover object-center brightness-[0.45] contrast-120 saturate-70 opacity-60"
+          className="object-cover object-center brightness-[0.65] contrast-110 saturate-80 opacity-50"
           style={{ 
             transform: prefersReducedMotion ? 'none' : 'scale(1.02)',
             transition: 'transform 0.8s ease-out'

@@ -75,7 +75,7 @@ export function useParallax(intensity: number = 0.5) {
     if (!element || window.innerWidth < 768) return;
 
     gsap.to(element, {
-      y: (i, target) => -ScrollTrigger.maxScroll(window) * intensity,
+      y: -ScrollTrigger.maxScroll(window) * intensity,
       ease: 'none',
       scrollTrigger: {
         trigger: element,

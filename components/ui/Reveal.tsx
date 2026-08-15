@@ -18,10 +18,16 @@ export function Reveal({ children, className, depth = 'none', style }: Props) {
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
+    
+    // Use requestAnimationFrame to avoid setState during effect
+    requestAnimationFrame(() => {
+      setPrefersReducedMotion(mediaQuery.matches);
+    });
     
     const handleChange = (e: MediaQueryListEvent) => {
-      setPrefersReducedMotion(e.matches);
+      requestAnimationFrame(() => {
+        setPrefersReducedMotion(e.matches);
+      });
     };
     
     mediaQuery.addEventListener('change', handleChange);
