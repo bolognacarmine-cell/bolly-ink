@@ -11,6 +11,7 @@ type Props = {
   target?: "_blank" | "_self";
   rel?: string;
   ariaLabel?: string;
+  disabled?: boolean;
 };
 
 export function Button({
@@ -22,6 +23,7 @@ export function Button({
   target,
   rel,
   ariaLabel,
+  disabled = false,
 }: Props) {
   const base =
     "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-4 py-3.5 text-[13px] sm:px-5 sm:py-3 text-center leading-none font-medium tracking-wide whitespace-nowrap transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:opacity-60 disabled:pointer-events-none";
