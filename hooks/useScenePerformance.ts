@@ -67,7 +67,10 @@ export function useScenePerformance() {
       };
     }
 
-    setPerformanceLevel(level);
+    // Use requestAnimationFrame to avoid setState during effect
+    requestAnimationFrame(() => {
+      setPerformanceLevel(level);
+    });
   }, []);
 
   return performanceLevel;
@@ -124,7 +127,9 @@ export function useMemoryManager() {
 
   useEffect(() => {
     const checkMemory = () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((performance as any).memory) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const memory = (performance as any).memory;
         const used = memory.usedJSHeapSize;
         const total = memory.jsHeapSizeLimit;

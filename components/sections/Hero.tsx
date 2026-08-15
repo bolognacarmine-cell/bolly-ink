@@ -19,26 +19,25 @@ export function Hero() {
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
+    
+    requestAnimationFrame(() => {
+      setPrefersReducedMotion(mediaQuery.matches);
+    });
     
     const handleChange = (e: MediaQueryListEvent) => {
-      setPrefersReducedMotion(e.matches);
+      requestAnimationFrame(() => {
+        setPrefersReducedMotion(e.matches);
+      });
     };
-    
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
     
     mediaQuery.addEventListener('change', handleChange);
-    window.addEventListener('resize', checkMobile);
-    checkMobile();
-    
-    return () => {
-      mediaQuery.removeEventListener('change', handleChange);
-      window.removeEventListener('resize', checkMobile);
-    };
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
   useEffect(() => {
-    setIsVisible(true);
+    requestAnimationFrame(() => {
+      setIsVisible(true);
+    });
     // Stagger hero content loading
     setTimeout(() => setHeroLoaded(true), 300);
   }, []);

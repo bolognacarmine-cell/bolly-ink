@@ -22,7 +22,6 @@ export class PerformanceManager {
     // Check for low-end device indicators
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     const cores = navigator.hardwareConcurrency || 4;
-    const memory = (performance as any).memory ? (performance as any).memory.jsHeapSizeLimit : 0;
     
     // Consider device low-end if mobile with limited cores
     this.isLowEndDevice = isMobile && cores < 4;
@@ -62,7 +61,9 @@ export class PerformanceManager {
     if (typeof window === 'undefined') return false;
     try {
       const canvas = document.createElement('canvas');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return !!(window.WebGLRenderingContext && 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
     } catch (e) {
       return false;
@@ -76,6 +77,7 @@ export class PerformanceManager {
     if (typeof window === 'undefined') return false;
     try {
       const canvas = document.createElement('canvas');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return !!(window.WebGL2RenderingContext && canvas.getContext('webgl2'));
     } catch (e) {
       return false;
@@ -98,6 +100,7 @@ export class PerformanceManager {
   /**
    * Throttle function for performance
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   throttle<T extends (...args: any[]) => any>(
     func: T,
     limit: number
@@ -115,6 +118,7 @@ export class PerformanceManager {
   /**
    * Debounce function for performance
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   debounce<T extends (...args: any[]) => any>(
     func: T,
     wait: number

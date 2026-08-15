@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -33,7 +33,7 @@ export function useImmersiveScroll(options: UseImmersiveScrollOptions = {}) {
   } = options;
 
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
-  const currentSectionRef = useRef<'hero' | 'about' | 'portfolio' | 'contact'>('hero');
+  const [currentSection, setCurrentSection] = useState<'hero' | 'about' | 'portfolio' | 'contact'>('hero');
 
   useEffect(() => {
     // Skip on mobile for performance
@@ -62,8 +62,8 @@ export function useImmersiveScroll(options: UseImmersiveScrollOptions = {}) {
           }
 
           // Call section change callback only when section changes
-          if (newSection !== currentSectionRef.current) {
-            currentSectionRef.current = newSection;
+          if (newSection !== currentSection) {
+            setCurrentSection(newSection);
             onSectionChange?.(newSection);
           }
         }
@@ -76,9 +76,9 @@ export function useImmersiveScroll(options: UseImmersiveScrollOptions = {}) {
       timeline.kill();
       ScrollTrigger.getAll().forEach(t => t.kill());
     };
-  }, [trigger, start, end, scrub, onUpdate, onSectionChange]);
+  }, [trigger, start, end, scrub, onUpdate, onSectionChange, currentSection]);
 
-  return { timeline: timelineRef, currentSection: currentSectionRef.current };
+  return { timeline: timelineRef, currentSection };
 }
 
 /**
@@ -89,7 +89,7 @@ export function useCameraScroll(
   cameraPosition: { x: number; y: number; z: number },
   targetPosition: { x: number; y: number; z: number }
 ) {
-  const cameraRef = useRef<any>(null);
+  const cameraRef = useRef<{ x: number; y: number; z: number } | null>(null);
 
   useEffect(() => {
     if (window.innerWidth < 768) return;

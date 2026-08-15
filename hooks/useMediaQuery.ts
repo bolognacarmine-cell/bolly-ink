@@ -5,7 +5,11 @@ export function useMediaQuery(query: string): boolean {
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(query);
-    setMatches(mediaQuery.matches);
+    
+    // Use requestAnimationFrame to avoid setState during effect
+    requestAnimationFrame(() => {
+      setMatches(mediaQuery.matches);
+    });
 
     const handleChange = (event: MediaQueryListEvent) => {
       setMatches(event.matches);

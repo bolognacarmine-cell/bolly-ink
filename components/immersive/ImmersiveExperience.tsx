@@ -25,6 +25,7 @@ export function ImmersiveExperience({ className }: ImmersiveExperienceProps) {
   const [hasError, setHasError] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [sceneReady, setSceneReady] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -80,6 +81,7 @@ export function ImmersiveExperience({ className }: ImmersiveExperienceProps) {
       clearTimeout(loadingTimeout);
       setIsLoading(false);
       setIsLoaded(true);
+      setSceneReady(true);
 
       return () => {
         clearTimeout(loadingTimeout);
@@ -120,7 +122,7 @@ export function ImmersiveExperience({ className }: ImmersiveExperienceProps) {
         aria-label="Esperienza 3D immersiva: ago, inchiostro e portfolio"
         role="img"
       />
-      {isLoaded && !isLoading && sceneRef.current && (
+      {sceneReady && sceneRef.current && (
         <>
           <CameraRig scene={sceneRef.current} />
           <SceneLighting scene={sceneRef.current} />
