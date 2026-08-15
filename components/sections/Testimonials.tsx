@@ -37,7 +37,7 @@ export function Testimonials() {
                 </div>
               </div>
               <blockquote className="text-sm text-white/70 leading-relaxed">
-                "{t.text}"
+                &ldquo;{t.text}&rdquo;
               </blockquote>
               <figcaption className="mt-6 flex items-center justify-between gap-4">
                 <div>

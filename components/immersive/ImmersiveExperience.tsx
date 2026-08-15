@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Scene3D } from '@/lib/three/Scene3D';
 import { getPerformanceManager } from '@/lib/three/PerformanceManager';
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { CameraRig } from './CameraRig';
 import { NeedleObject } from './NeedleObject';
 import { InkTrail } from './InkTrail';
@@ -11,7 +10,6 @@ import { PortfolioScene } from './PortfolioScene';
 import { SceneLighting } from './SceneLighting';
 import { SceneFallback } from './SceneFallback';
 import { SceneLoader } from './SceneLoader';
-import * as THREE from 'three';
 
 interface ImmersiveExperienceProps {
   className?: string;
@@ -26,16 +24,25 @@ export function ImmersiveExperience({ className }: ImmersiveExperienceProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [sceneReady, setSceneReady] = useState(false);
+  const [sceneInstance, setSceneInstance] = useState<Scene3D | null>(null);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     
     checkMobile();
-    setPrefersReducedMotion(mediaQuery.matches);
+    
+    // Use requestAnimationFrame to avoid setState during effect
+    requestAnimationFrame(() => {
+      setPrefersReducedMotion(mediaQuery.matches);
+    });
     
     const handleResize = () => checkMobile();
-    const handleMotionChange = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    const handleMotionChange = (e: MediaQueryListEvent) => {
+      requestAnimationFrame(() => {
+        setPrefersReducedMotion(e.matches);
+      });
+    };
     
     window.addEventListener('resize', handleResize);
     mediaQuery.addEventListener('change', handleMotionChange);
@@ -52,8 +59,10 @@ export function ImmersiveExperience({ className }: ImmersiveExperienceProps) {
 
     // Skip 3D on mobile or if reduced motion is preferred
     if (isMobile || prefersReducedMotion) {
-      setIsLoading(false);
-      setIsLoaded(true);
+      requestAnimationFrame(() => {
+        setIsLoading(false);
+        setIsLoaded(true);
+      });
       return;
     }
 
@@ -61,14 +70,18 @@ export function ImmersiveExperience({ className }: ImmersiveExperienceProps) {
     const performanceManager = getPerformanceManager();
     if (!performanceManager.isWebGLAvailable()) {
       console.warn('WebGL not supported');
-      setHasError(true);
-      setIsLoading(false);
-      setIsLoaded(true);
+      requestAnimationFrame(() => {
+        setHasError(true);
+        setIsLoading(false);
+        setIsLoaded(true);
+      });
       return;
     }
 
     try {
-      setIsLoading(true);
+      requestAnimationFrame(() => {
+        setIsLoading(true);
+      });
       
       const loadingTimeout = setTimeout(() => {
         setIsLoading(false);
@@ -76,11 +89,14 @@ export function ImmersiveExperience({ className }: ImmersiveExperienceProps) {
 
       const scene = new Scene3D(canvas);
       sceneRef.current = scene;
+      setSceneInstance(scene);
       scene.init();
 
       clearTimeout(loadingTimeout);
-      setIsLoading(false);
-      setIsLoaded(true);
+      requestAnimationFrame(() => {
+        setIsLoading(false);
+        setIsLoaded(true);
+      });
       setSceneReady(true);
 
       return () => {
@@ -89,9 +105,11 @@ export function ImmersiveExperience({ className }: ImmersiveExperienceProps) {
       };
     } catch (error) {
       console.error('Error initializing immersive experience:', error);
-      setHasError(true);
-      setIsLoading(false);
-      setIsLoaded(true);
+      requestAnimationFrame(() => {
+        setHasError(true);
+        setIsLoading(false);
+        setIsLoaded(true);
+      });
     }
   }, [isMobile, prefersReducedMotion]);
 
@@ -122,13 +140,13 @@ export function ImmersiveExperience({ className }: ImmersiveExperienceProps) {
         aria-label="Esperienza 3D immersiva: ago, inchiostro e portfolio"
         role="img"
       />
-      {sceneReady && sceneRef.current && (
+      {sceneReady && sceneInstance && (
         <>
-          <CameraRig scene={sceneRef.current} />
-          <SceneLighting scene={sceneRef.current} />
-          <NeedleObject scene={sceneRef.current} />
-          <InkTrail scene={sceneRef.current} />
-          <PortfolioScene scene={sceneRef.current} />
+          <CameraRig scene={sceneInstance} />
+          <SceneLighting scene={sceneInstance} />
+          <NeedleObject scene={sceneInstance} />
+          <InkTrail scene={sceneInstance} />
+          <PortfolioScene scene={sceneInstance} />
         </>
       )}
     </div>

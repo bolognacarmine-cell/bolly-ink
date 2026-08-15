@@ -42,10 +42,18 @@ export function Hero3D({ className }: Hero3DProps) {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     
     checkMobile();
-    setPrefersReducedMotion(mediaQuery.matches);
+    
+    // Use requestAnimationFrame to avoid setState during effect
+    requestAnimationFrame(() => {
+      setPrefersReducedMotion(mediaQuery.matches);
+    });
     
     const handleResize = () => checkMobile();
-    const handleMotionChange = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    const handleMotionChange = (e: MediaQueryListEvent) => {
+      requestAnimationFrame(() => {
+        setPrefersReducedMotion(e.matches);
+      });
+    };
     
     window.addEventListener('resize', handleResize);
     mediaQuery.addEventListener('change', handleMotionChange);
@@ -62,8 +70,10 @@ export function Hero3D({ className }: Hero3DProps) {
 
     // Skip 3D on mobile or if reduced motion is preferred
     if (isMobile || prefersReducedMotion) {
-      setIsLoading(false);
-      setIsLoaded(true);
+      requestAnimationFrame(() => {
+        setIsLoading(false);
+        setIsLoaded(true);
+      });
       return;
     }
 
@@ -71,14 +81,18 @@ export function Hero3D({ className }: Hero3DProps) {
     const performanceManager = getPerformanceManager();
     if (!performanceManager.isWebGLAvailable()) {
       console.warn('WebGL not supported');
-      setHasError(true);
-      setIsLoading(false);
-      setIsLoaded(true);
+      requestAnimationFrame(() => {
+        setHasError(true);
+        setIsLoading(false);
+        setIsLoaded(true);
+      });
       return;
     }
 
     try {
-      setIsLoading(true);
+      requestAnimationFrame(() => {
+        setIsLoading(true);
+      });
       
       // Simulate loading delay for smoother experience
       const loadingTimeout = setTimeout(() => {
@@ -401,8 +415,10 @@ export function Hero3D({ className }: Hero3DProps) {
       });
 
       clearTimeout(loadingTimeout);
-      setIsLoading(false);
-      setIsLoaded(true);
+      requestAnimationFrame(() => {
+        setIsLoading(false);
+        setIsLoaded(true);
+      });
 
       // Cleanup
       return () => {
@@ -419,9 +435,11 @@ export function Hero3D({ className }: Hero3DProps) {
       };
     } catch (error) {
       console.error('Error initializing 3D scene:', error);
-      setHasError(true);
-      setIsLoading(false);
-      setIsLoaded(true);
+      requestAnimationFrame(() => {
+        setHasError(true);
+        setIsLoading(false);
+        setIsLoaded(true);
+      });
     }
   }, [isMobile, prefersReducedMotion]);
 
