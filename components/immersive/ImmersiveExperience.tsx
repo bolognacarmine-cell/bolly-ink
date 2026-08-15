@@ -7,6 +7,7 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { CameraRig } from './CameraRig';
 import { NeedleObject } from './NeedleObject';
 import { InkTrail } from './InkTrail';
+import { PortfolioScene } from './PortfolioScene';
 import { SceneLighting } from './SceneLighting';
 import { SceneFallback } from './SceneFallback';
 import { SceneLoader } from './SceneLoader';
@@ -125,6 +126,7 @@ export function ImmersiveExperience({ className }: ImmersiveExperienceProps) {
           <SceneLighting scene={sceneRef.current} />
           <NeedleObject scene={sceneRef.current} />
           <InkTrail scene={sceneRef.current} />
+          <PortfolioScene scene={sceneRef.current} />
         </>
       )}
     </div>

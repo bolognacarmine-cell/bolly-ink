@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { site } from "@/data/site";
 import { use3DTilt } from "@/hooks/use3DTilt";
-import { Hero3D } from "@/components/Hero3D";
+import { ImmersiveExperience } from "@/components/immersive/ImmersiveExperience";
 import { useEffect, useState } from "react";
 
 export function Hero() {
@@ -46,7 +46,7 @@ export function Hero() {
   return (
     <section id="top" className="relative overflow-hidden min-h-screen">
       {/* 3D WebGL Scene - visible behind content */}
-      <Hero3D className="z-10" />
+      <ImmersiveExperience className="z-10" />
       
       {/* Original background with reduced opacity for depth layering */}
       <div className="absolute inset-0 z-0">
