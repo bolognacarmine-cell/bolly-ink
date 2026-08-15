@@ -15,6 +15,7 @@ export function Hero() {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [heroLoaded, setHeroLoaded] = useState(false);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -38,6 +39,8 @@ export function Hero() {
 
   useEffect(() => {
     setIsVisible(true);
+    // Stagger hero content loading
+    setTimeout(() => setHeroLoaded(true), 300);
   }, []);
 
   return (
@@ -86,7 +89,15 @@ export function Hero() {
           <div className="max-w-3xl">
             <h1 
               className="max-w-[10ch] text-[2.35rem] sm:text-6xl font-semibold tracking-tight text-white leading-[0.98] sm:leading-[1.05]"
-              style={{ transform: 'translateZ(20px)' }}
+              style={{ 
+                transform: prefersReducedMotion 
+                  ? `translateY(${isVisible ? 0 : 30}px) translateZ(20px)`
+                  : `translateY(${isVisible ? 0 : 30}px) translateZ(20px)`,
+                opacity: isVisible ? 1 : 0,
+                transition: prefersReducedMotion 
+                  ? 'transform 0.8s ease-out, opacity 0.8s ease-out'
+                  : 'transform 0.8s ease-out, opacity 0.8s ease-out'
+              }}
             >
               Arte sulla pelle.
               <span className="block text-white/80">
@@ -96,14 +107,30 @@ export function Hero() {
 
             <p 
               className="mt-5 max-w-xl text-[15px] sm:text-lg text-white/70 leading-relaxed"
-              style={{ transform: 'translateZ(15px)' }}
+              style={{ 
+                transform: prefersReducedMotion 
+                  ? `translateY(${heroLoaded ? 0 : 30}px) translateZ(15px)`
+                  : `translateY(${heroLoaded ? 0 : 30}px) translateZ(15px)`,
+                opacity: heroLoaded ? 1 : 0,
+                transition: prefersReducedMotion 
+                  ? 'transform 0.8s ease-out 0.2s, opacity 0.8s ease-out 0.2s'
+                  : 'transform 0.8s ease-out 0.2s, opacity 0.8s ease-out 0.2s'
+              }}
             >
               {site.tagline}
             </p>
 
             <div 
               className="mt-10 flex flex-col sm:flex-row gap-3"
-              style={{ transform: 'translateZ(25px)' }}
+              style={{ 
+                transform: prefersReducedMotion 
+                  ? `translateY(${heroLoaded ? 0 : 30}px) translateZ(25px)`
+                  : `translateY(${heroLoaded ? 0 : 30}px) translateZ(25px)`,
+                opacity: heroLoaded ? 1 : 0,
+                transition: prefersReducedMotion 
+                  ? 'transform 0.8s ease-out 0.4s, opacity 0.8s ease-out 0.4s'
+                  : 'transform 0.8s ease-out 0.4s, opacity 0.8s ease-out 0.4s'
+              }}
             >
               <Button
                 href={site.contacts.whatsappUrl}
@@ -123,18 +150,34 @@ export function Hero() {
 
             <div 
               className="mt-10 grid grid-cols-1 min-[430px]:grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl"
-              style={{ transform: 'translateZ(10px)' }}
+              style={{ 
+                transform: prefersReducedMotion 
+                  ? `translateY(${heroLoaded ? 0 : 30}px) translateZ(10px)`
+                  : `translateY(${heroLoaded ? 0 : 30}px) translateZ(10px)`,
+                opacity: heroLoaded ? 1 : 0,
+                transition: prefersReducedMotion 
+                  ? 'transform 0.8s ease-out 0.6s, opacity 0.8s ease-out 0.6s'
+                  : 'transform 0.8s ease-out 0.6s, opacity 0.8s ease-out 0.6s'
+              }}
             >
               {[
                 { k: "Igiene", v: "Protocollo studio" },
                 { k: "Design", v: "Progetto su misura" },
                 { k: "Precisione", v: "Linee e ombre" },
                 { k: "Premium", v: "Esperienza dedicata" },
-              ].map((item) => (
+              ].map((item, index) => (
                 <div
                   key={item.k}
                   className="rounded-2xl border border-white/10 bg-black/40 backdrop-blur-md px-4 py-4"
-                  style={{ transform: 'translateZ(5px)' }}
+                  style={{ 
+                    transform: prefersReducedMotion 
+                      ? `translateY(${heroLoaded ? 0 : 30}px) translateZ(5px)`
+                      : `translateY(${heroLoaded ? 0 : 30}px) translateZ(5px)`,
+                    opacity: heroLoaded ? 1 : 0,
+                    transition: prefersReducedMotion 
+                      ? `transform 0.8s ease-out ${0.6 + index * 0.1}s, opacity 0.8s ease-out ${0.6 + index * 0.1}s`
+                      : `transform 0.8s ease-out ${0.6 + index * 0.1}s, opacity 0.8s ease-out ${0.6 + index * 0.1}s`
+                  }}
                 >
                   <p className="text-sm font-semibold text-white">{item.k}</p>
                   <p className="mt-1 text-xs text-white/60">{item.v}</p>

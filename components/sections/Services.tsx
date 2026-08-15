@@ -4,17 +4,10 @@ import { Section } from "@/components/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { Card3D } from "@/components/ui/Card3D";
 import { services } from "@/data/site";
-import { useEffect, useState } from "react";
+import { useIsMobile } from "@/hooks/useMediaQuery";
 
 export function Services() {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  const isMobile = useIsMobile();
 
   return (
     <Section id="servizi" className="bg-black">
@@ -36,8 +29,8 @@ export function Services() {
       </Reveal>
 
       <div className="mt-12 grid gap-4 sm:gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {services.map((s) => (
-          <Reveal key={s.id} className="h-full">
+        {services.map((s, index) => (
+          <Reveal key={s.id} className="h-full" style={{ transitionDelay: `${index * 0.1}s` }}>
             <Card3D depth="medium" disabled={isMobile} className="h-full">
               <div className="h-full rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-md shadow-[0_18px_60px_-40px_rgba(255,255,255,.35)]">
                 <div 
@@ -63,7 +56,7 @@ export function Services() {
                     {s.tags.map((t) => (
                       <span
                         key={t}
-                        className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-xs text-white/70"
+                        className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-xs text-white/70 transition hover:bg-black/40 hover:border-white/20"
                       >
                         {t}
                       </span>

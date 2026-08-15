@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { performanceManager } from './PerformanceManager';
+import { getPerformanceManager } from './PerformanceManager';
 
 /**
  * Core 3D Scene Manager
@@ -29,16 +29,13 @@ export class Scene3D {
     this.camera.position.z = 5;
 
     // Renderer with performance-optimized configuration
-    const rendererConfig = performanceManager.getRendererConfig();
+    const performanceManager = getPerformanceManager();
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
-      antialias: rendererConfig.antialias,
-      alpha: rendererConfig.alpha,
-      powerPreference: rendererConfig.powerPreference,
-      stencil: rendererConfig.stencil
+      ...performanceManager.getRendererConfig()
     });
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(performanceManager.getPixelRatio());
+    this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
     this.renderer.setClearColor(0x000000, 0);
   }
 

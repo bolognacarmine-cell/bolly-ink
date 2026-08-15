@@ -7,6 +7,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Lightbox } from "@/components/ui/Lightbox";
 import { Card3D } from "@/components/ui/Card3D";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/useMediaQuery";
 import type { PortfolioImage } from "@/data/site";
 
 type SortMode = "newest" | "oldest";
@@ -16,6 +17,7 @@ type Props = {
 };
 
 export function PortfolioImages({ images }: Props) {
+  const isMobile = useIsMobile();
   const styles = useMemo<string[]>(() => {
     const set = new Set(images.map((i) => i.style));
     return ["all", ...Array.from(set)];
@@ -24,14 +26,6 @@ export function PortfolioImages({ images }: Props) {
   const [style, setStyle] = useState<string>("all");
   const [sort, setSort] = useState<SortMode>("newest");
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   const items = useMemo(() => {
     const filtered =
@@ -115,7 +109,7 @@ export function PortfolioImages({ images }: Props) {
         <div className="columns-1 min-[430px]:columns-2 sm:columns-3 lg:columns-4 gap-4 [column-fill:_balance]">
           {items.map((img, idx) => (
             <div key={img.id} className="mb-4 break-inside-avoid">
-              <Reveal>
+              <Reveal style={{ transitionDelay: `${idx * 0.05}s` }}>
                 <Card3D depth="shallow" disabled={isMobile} className="w-full">
                   <button
                     onClick={() => setOpenIndex(idx)}

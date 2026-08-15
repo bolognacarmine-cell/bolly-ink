@@ -2,10 +2,10 @@ import { Header } from "@/components/Header";
 import { StickyCTA } from "@/components/StickyCTA";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/sections/Hero";
+import { About } from "@/components/sections/About";
 import { Services } from "@/components/sections/Services";
 import { PortfolioImages } from "@/components/sections/PortfolioImages";
 import { VideoGallery } from "@/components/sections/VideoGallery";
-import { About } from "@/components/sections/About";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Contact } from "@/components/sections/Contact";
 import { getMedia } from "@/lib/media";
@@ -30,10 +30,10 @@ export default async function Home() {
       <StickyCTA />
       <main>
         <Hero />
+        <About />
         <Services />
         <PortfolioImages images={media.portfolioImages} />
         <VideoGallery videos={media.videos} />
-        <About />
         <Testimonials />
         <Contact />
       </main>

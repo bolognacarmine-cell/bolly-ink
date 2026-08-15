@@ -9,7 +9,10 @@ export class PerformanceManager {
   private maxObjects: number = 100;
 
   constructor() {
-    this.detectDeviceCapabilities();
+    // Only detect device capabilities if window is available (client-side)
+    if (typeof window !== 'undefined') {
+      this.detectDeviceCapabilities();
+    }
   }
 
   /**
@@ -56,6 +59,7 @@ export class PerformanceManager {
    * Check if WebGL is available
    */
   isWebGLAvailable(): boolean {
+    if (typeof window === 'undefined') return false;
     try {
       const canvas = document.createElement('canvas');
       return !!(window.WebGLRenderingContext && 
@@ -69,6 +73,7 @@ export class PerformanceManager {
    * Check if WebGL2 is available (for shader support)
    */
   isWebGL2Available(): boolean {
+    if (typeof window === 'undefined') return false;
     try {
       const canvas = document.createElement('canvas');
       return !!(window.WebGL2RenderingContext && canvas.getContext('webgl2'));
@@ -122,5 +127,12 @@ export class PerformanceManager {
   }
 }
 
-// Singleton instance
-export const performanceManager = new PerformanceManager();
+// Lazy singleton instance - only created when accessed on client-side
+let performanceManagerInstance: PerformanceManager | null = null;
+
+export function getPerformanceManager(): PerformanceManager {
+  if (!performanceManagerInstance) {
+    performanceManagerInstance = new PerformanceManager();
+  }
+  return performanceManagerInstance;
+}

@@ -6,6 +6,12 @@
   --muted: rgba(255, 255, 255, 0.62);
   --muted2: rgba(255, 255, 255, 0.42);
   --ring: rgba(255, 255, 255, 0.42);
+  
+  /* Accent colors */
+  --accent-primary: #8b5cf6;
+  --accent-secondary: #6366f1;
+  --accent-success: #10b981;
+  --accent-warning: #f59e0b;
 }
 
 @theme inline {
@@ -13,6 +19,12 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-body);
   --font-heading: var(--font-heading);
+  
+  /* Accent color utilities */
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-accent-success: var(--accent-success);
+  --color-accent-warning: var(--accent-warning);
 }
 
 body {

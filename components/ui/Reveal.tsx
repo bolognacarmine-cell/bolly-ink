@@ -8,9 +8,10 @@ type Props = {
   children: ReactNode;
   className?: string;
   depth?: 'none' | 'shallow' | 'medium';
+  style?: React.CSSProperties;
 };
 
-export function Reveal({ children, className, depth = 'none' }: Props) {
+export function Reveal({ children, className, depth = 'none', style }: Props) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -66,6 +67,7 @@ export function Reveal({ children, className, depth = 'none' }: Props) {
         className,
       )}
       style={{
+        ...style,
         transform: prefersReducedMotion 
           ? (visible ? 'translateY(0)' : 'translateY(20px)')
           : (visible 

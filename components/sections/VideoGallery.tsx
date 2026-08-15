@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { Section } from "@/components/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { cn } from "@/lib/utils";
@@ -8,6 +11,8 @@ type Props = {
 };
 
 export function VideoGallery({ videos }: Props) {
+  const [hoveredVideo, setHoveredVideo] = useState<string | null>(null);
+
   return (
     <Section id="video" className="bg-black">
       <Reveal>
@@ -32,15 +37,20 @@ export function VideoGallery({ videos }: Props) {
         {videos
           .slice()
           .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-          .map((v) => (
-            <Reveal key={v.id} className="h-full">
-              <article className="h-full rounded-2xl border border-white/10 bg-white/5 overflow-hidden shadow-[0_22px_70px_-55px_rgba(255,255,255,.35)]">
+          .map((v, index) => (
+            <Reveal key={v.id} style={{ transitionDelay: `${index * 0.1}s` }}>
+              <article 
+                className="h-full rounded-2xl border border-white/10 bg-white/5 overflow-hidden shadow-[0_22px_70px_-55px_rgba(255,255,255,.35)] transition hover:shadow-[0_30px_80px_-60px_rgba(255,255,255,.45)]"
+                onMouseEnter={() => setHoveredVideo(v.id)}
+                onMouseLeave={() => setHoveredVideo(null)}
+              >
                 <div
                   className={cn(
-                    "relative w-full bg-black",
+                    "relative w-full bg-black transition-transform duration-500",
                     v.orientation === "vertical"
                       ? "aspect-[9/16]"
                       : "aspect-video",
+                    hoveredVideo === v.id ? "scale-[1.02]" : "scale-100"
                   )}
                 >
                   <video
@@ -49,6 +59,8 @@ export function VideoGallery({ videos }: Props) {
                     playsInline
                     preload="metadata"
                     poster={v.poster}
+                    muted={hoveredVideo === v.id}
+                    autoPlay={hoveredVideo === v.id}
                   >
                     {v.src ? <source src={v.src} type="video/mp4" /> : null}
                     Il tuo browser non supporta il tag video.
