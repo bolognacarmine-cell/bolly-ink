@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import type { ReactNode } from "react";
+import type { ReactNode, CSSProperties } from "react";
 
 type Props = {
   href?: string;
@@ -12,6 +12,7 @@ type Props = {
   rel?: string;
   ariaLabel?: string;
   disabled?: boolean;
+  style?: CSSProperties;
 };
 
 export function Button({
@@ -24,6 +25,7 @@ export function Button({
   rel,
   ariaLabel,
   disabled = false,
+  style,
 }: Props) {
   const base =
     "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-4 py-3.5 text-base sm:px-5 sm:py-3 text-center leading-none font-bold tracking-wide whitespace-nowrap transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/70 disabled:opacity-60 disabled:pointer-events-none";
@@ -47,6 +49,7 @@ export function Button({
         target={target}
         rel={rel}
         aria-label={ariaLabel}
+        style={style}
       >
         {children}
       </Link>
@@ -54,7 +57,7 @@ export function Button({
   }
 
   return (
-    <button onClick={onClick} className={classes} aria-label={ariaLabel}>
+    <button onClick={onClick} className={classes} aria-label={ariaLabel} style={style}>
       {children}
     </button>
   );
