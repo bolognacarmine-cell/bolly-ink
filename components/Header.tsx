@@ -74,7 +74,8 @@ export function Header() {
               <Button
                 href="#contatti"
                 variant="secondary"
-                className="hidden sm:inline-flex"
+                className="hidden sm:inline-flex btn-secondary"
+                ariaLabel="Contatta lo studio"
               >
                 {site.ctaTertiary}
               </Button>
@@ -82,7 +83,9 @@ export function Header() {
                 href={site.contacts.whatsappUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="px-4 sm:px-5"
+                className="btn-primary px-4 sm:px-5"
+                ariaLabel="Prenota subito su WhatsApp"
+                style={{ fontSize: "1rem", fontWeight: 700, letterSpacing: "0.025em" }}
               >
                 {site.ctaPrimary}
               </Button>

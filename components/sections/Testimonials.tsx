@@ -12,7 +12,7 @@ export function Testimonials() {
           <p className="text-xs tracking-[0.22em] uppercase text-white/60">
             Recensioni
           </p>
-          <h2 className="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-white">
+          <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight text-accent-primary drop-shadow-lg">
             Poche, curate. Come i pezzi.
           </h2>
         </div>
@@ -21,13 +21,13 @@ export function Testimonials() {
       <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {testimonials.map((t, index) => (
           <Reveal key={t.id} className="h-full" style={{ transitionDelay: `${index * 0.1}s` }}>
-            <figure className="h-full rounded-2xl border border-white/10 bg-white/5 p-6 shadow-[0_20px_70px_-55px_rgba(255,255,255,.35)] transition hover:shadow-[0_25px_80px_-60px_rgba(255,255,255,.45)] hover:border-white/15">
+            <figure className="h-full rounded-2xl border border-accent-primary/20 bg-zinc-900/60 p-6 shadow-md transition hover:shadow-lg focus-within:shadow-xl hover:border-accent-primary/60">
               <div className="flex items-start gap-3 mb-4">
                 <div className="flex">
                   {[...Array(5)].map((_, i) => (
                     <svg
                       key={i}
-                      className="w-4 h-4 text-white/60"
+                      className="w-4 h-4 text-accent-primary/80"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -36,18 +36,18 @@ export function Testimonials() {
                   ))}
                 </div>
               </div>
-              <blockquote className="text-sm text-white/70 leading-relaxed">
+              <blockquote className="text-base text-white/80 leading-relaxed">
                 &ldquo;{t.text}&rdquo;
               </blockquote>
               <figcaption className="mt-6 flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-sm font-semibold text-white">{t.name}</p>
+                  <p className="text-base font-bold text-accent-primary">{t.name}</p>
                   {t.city ? (
-                    <p className="text-xs text-white/55">{t.city}</p>
+                    <p className="text-xs text-white/55 font-medium">{t.city}</p>
                   ) : null}
                 </div>
-                <div className="h-10 w-10 rounded-full border border-white/10 bg-black/30 flex items-center justify-center">
-                  <span className="text-sm font-semibold text-white/60">
+                <div className="h-10 w-10 rounded-full border border-accent-primary/20 bg-black/30 flex items-center justify-center">
+                  <span className="text-base font-semibold text-accent-primary/90">
                     {t.name.charAt(0)}
                   </span>
                 </div>

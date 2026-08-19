@@ -20,19 +20,16 @@ export function About() {
             <p className="text-xs tracking-[0.22em] uppercase text-white/60">
               Artista
             </p>
-            <h2 className="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-white">
+            <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight text-accent-primary drop-shadow-lg">
               {site.artistName}
             </h2>
-            <p className="mt-5 text-sm text-white/65 leading-relaxed">
-              Christian è un tatuatore emergente con una visione già forte,
-              riconoscibile e molto personale. Ogni progetto nasce da una
-              consulenza chiara: concept, proporzioni, flusso sul corpo e resa
-              nel tempo.
+            <p className="mt-5 text-base text-white/80 leading-relaxed">
+              Christian è un tatuatore emergente con una visione <b>autentica e riconoscibile</b>. Ogni progetto nasce da una
+              consulenza trasparente: concept, proporzioni, flusso sul corpo e resa nel tempo.
             </p>
-            <p className="mt-4 text-sm text-white/65 leading-relaxed">
-              Studio orientato a igiene, precisione e comfort. Materiali
-              certificati, protocolli rigorosi e attenzione ai dettagli: dal
-              linework al finish finale.
+            <p className="mt-4 text-base text-white/70 leading-relaxed">
+              Studio orientato a igiene, precisione e comfort. Materiali certificati, protocolli rigorosi e attenzione ai dettagli:
+              dal linework al finish finale.
             </p>
             <div className="mt-8 grid grid-cols-2 gap-3">
               {[
@@ -43,10 +40,10 @@ export function About() {
               ].map((i) => (
                 <div
                   key={i.k}
-                  className="rounded-2xl border border-white/10 bg-white/5 p-4"
+                  className="rounded-xl border border-accent-primary/20 bg-zinc-900/60 p-4 flex flex-col items-center shadow-md"
                 >
-                  <p className="text-xs text-white/55">{i.k}</p>
-                  <p className="mt-1 text-sm font-semibold text-white">
+                  <p className="text-xs text-accent-primary font-semibold uppercase tracking-wide">{i.k}</p>
+                  <p className="mt-1 text-base font-bold text-white">
                     {i.isText ? i.v : <Counter end={parseInt(i.v)} suffix={i.suffix} />}
                   </p>
                 </div>

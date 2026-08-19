@@ -11,11 +11,13 @@ export function StickyCTA() {
           href={site.contacts.whatsappUrl}
           target="_blank"
           rel="noreferrer"
-          className="w-full shadow-[0_20px_80px_-45px_rgba(255,255,255,.45)] sm:w-auto"
+          className="w-full sm:w-auto btn-primary"
+          ariaLabel="Prenota subito su WhatsApp"
+          style={{ fontSize: "1.08rem", fontWeight: 700, letterSpacing: "0.025em" }}
         >
           Prenota ora
         </Button>
-        <Button href="#contatti" variant="secondary" className="hidden sm:inline-flex">
+        <Button href="#contatti" variant="secondary" className="hidden sm:inline-flex btn-secondary" ariaLabel="Apri la sezione contatti">
           Contatti
         </Button>
       </div>

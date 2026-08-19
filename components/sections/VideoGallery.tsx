@@ -21,7 +21,7 @@ export function VideoGallery({ videos }: Props) {
             <p className="text-xs tracking-[0.22em] uppercase text-white/60">
               Video
             </p>
-            <h2 className="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-white">
+            <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight text-accent-primary drop-shadow-lg">
               Lavorazione, close-up, timelapse.
             </h2>
             <p className="mt-3 max-w-2xl text-sm text-white/60 leading-relaxed">
@@ -40,7 +40,7 @@ export function VideoGallery({ videos }: Props) {
           .map((v, index) => (
             <Reveal key={v.id} style={{ transitionDelay: `${index * 0.1}s` }}>
               <article 
-                className="h-full rounded-2xl border border-white/10 bg-white/5 overflow-hidden shadow-[0_22px_70px_-55px_rgba(255,255,255,.35)] transition hover:shadow-[0_30px_80px_-60px_rgba(255,255,255,.45)]"
+                className="h-full rounded-2xl border border-accent-primary/20 bg-zinc-900/60 overflow-hidden shadow-md transition hover:shadow-lg focus-within:shadow-xl"
                 onMouseEnter={() => setHoveredVideo(v.id)}
                 onMouseLeave={() => setHoveredVideo(null)}
               >

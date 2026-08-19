@@ -40,7 +40,7 @@ export function Contact() {
             <p className="text-xs tracking-[0.22em] uppercase text-white/60">
               Contatti / Prenotazione
             </p>
-            <h2 className="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-white">
+            <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight text-accent-primary drop-shadow-lg">
               Prenota una consulenza.
             </h2>
             <p className="mt-3 max-w-2xl text-sm text-white/60 leading-relaxed">
@@ -55,7 +55,8 @@ export function Contact() {
               href={site.contacts.whatsappUrl}
               target="_blank"
               rel="noreferrer"
-              className="w-full"
+              className="w-full btn-primary"
+              ariaLabel="Scrivi su WhatsApp"
             >
               WhatsApp
             </Button>
@@ -64,7 +65,8 @@ export function Contact() {
               target="_blank"
               rel="noreferrer"
               variant="secondary"
-              className="w-full"
+              className="w-full btn-secondary"
+              ariaLabel="Profilo Instagram"
             >
               Instagram
             </Button>
@@ -73,7 +75,8 @@ export function Contact() {
               target="_blank"
               rel="noreferrer"
               variant="ghost"
-              className="w-full"
+              className="w-full text-accent-primary border-accent-primary/30 hover:bg-accent-primary/10"
+              ariaLabel="Profilo TikTok"
             >
               TikTok
             </Button>
@@ -125,14 +128,13 @@ export function Contact() {
             </label>
 
             <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-              <p className="text-xs text-white/50">
-                In produzione collega il form a un provider (Formspree, Resend,
-                endpoint API) o sostituisci la logica mailto.
+              <p className="text-xs text-accent-primary/80 font-medium">
+                In produzione collega il form a un provider (Formspree, Resend, endpoint API) o sostituisci la logica mailto.
               </p>
               <Button 
                 ariaLabel="Invia richiesta via email" 
                 href={mailto} 
-                className="w-full sm:w-auto transition hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full sm:w-auto btn-primary transition hover:scale-[1.02] active:scale-[0.98]"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'Invio in corso...' : 'Invia richiesta'}
@@ -142,30 +144,29 @@ export function Contact() {
         </Reveal>
 
         <Reveal style={{ transitionDelay: '0.1s' }}>
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 transition hover:shadow-[0_25px_90px_-65px_rgba(255,255,255,.4)]">
-            <h3 className="text-lg font-semibold text-white">Contatti diretti</h3>
-            <p className="mt-2 text-sm text-white/65 leading-relaxed">
-              Per privacy e gestione appuntamenti, posizione e dettagli completi
-              dello studio vengono condivisi dopo chiamata o messaggi.
+          <div className="rounded-3xl border border-accent-primary/20 bg-zinc-900/60 p-6 sm:p-8 shadow-md focus-within:shadow-xl">
+            <h3 className="text-lg font-bold text-accent-primary">Contatti diretti</h3>
+            <p className="mt-2 text-base text-white/80 leading-relaxed">
+              Per privacy e gestione appuntamenti, posizione e dettagli completi dello studio vengono condivisi dopo chiamata o messaggi.
             </p>
             <div className="mt-6 grid gap-3">
               <a
                 href={`tel:${site.contacts.phone.replaceAll(" ", "")}`}
-                className="rounded-2xl border border-white/10 bg-black/25 px-5 py-4 text-sm text-white/75 hover:bg-white/5 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 hover:border-white/15 flex items-center gap-3"
+                className="rounded-xl border border-accent-primary/20 bg-black/35 px-5 py-4 text-base text-accent-primary hover:bg-accent-primary/10 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary hover:border-accent-primary/60 flex items-center gap-3 font-semibold"
               >
-                <svg className="w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-accent-primary/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-                <span className="text-white">Tel: {site.contacts.phone}</span>
+                <span>Tel: {site.contacts.phone}</span>
               </a>
               <a
                 href={`mailto:${site.contacts.email}`}
-                className="rounded-2xl border border-white/10 bg-black/25 px-5 py-4 text-sm text-white/75 hover:bg-white/5 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 hover:border-white/15 flex items-center gap-3"
+                className="rounded-xl border border-accent-primary/20 bg-black/35 px-5 py-4 text-base text-accent-primary hover:bg-accent-primary/10 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary hover:border-accent-primary/60 flex items-center gap-3 font-semibold"
               >
-                <svg className="w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-accent-primary/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <span className="text-white">Email: {site.contacts.email}</span>
+                <span>Email: {site.contacts.email}</span>
               </a>
             </div>
           </div>

@@ -71,9 +71,12 @@ export function Reveal({ children, className, depth = 'none', style }: Props) {
         "transition duration-700 ease-out will-change-transform",
         visible ? "opacity-100" : "opacity-0",
         className,
+        visible ? "shadow-lg" : undefined
       )}
       style={{
         ...style,
+        transition: 'opacity 0.7s cubic-bezier(.22,1,.36,1), box-shadow 0.25s',
+        boxShadow: visible ? '0 4px 28px -9px var(--accent-primary, #8b5cf6)' : 'none',
         transform: prefersReducedMotion 
           ? (visible ? 'translateY(0)' : 'translateY(20px)')
           : (visible 

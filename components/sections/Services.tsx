@@ -17,7 +17,7 @@ export function Services() {
             <p className="text-xs tracking-[0.22em] uppercase text-white/60">
               Servizi
             </p>
-            <h2 className="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-white">
+            <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight text-accent-primary drop-shadow-lg">
               Stili, tecnica, visione.
             </h2>
           </div>
@@ -32,18 +32,18 @@ export function Services() {
         {services.map((s, index) => (
           <Reveal key={s.id} className="h-full" style={{ transitionDelay: `${index * 0.1}s` }}>
             <Card3D depth="medium" disabled={isMobile} className="h-full">
-              <div className="h-full rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-md shadow-[0_18px_60px_-40px_rgba(255,255,255,.35)]">
+              <div className="h-full rounded-2xl border border-accent-primary/20 bg-zinc-900/60 p-6 backdrop-blur-md shadow-md flex flex-col justify-between">
                 <div 
                   className="flex items-start justify-between gap-4"
                   style={{ transform: 'translateZ(8px)' }}
                 >
-                  <h3 className="text-lg font-semibold text-white">{s.title}</h3>
-                  <span className="text-[10px] text-white/50 tracking-[0.20em] uppercase">
+                  <h3 className="text-xl font-bold text-accent-primary drop-shadow-sm">{s.title}</h3>
+                  <span className="text-[10px] text-accent-primary/70 tracking-[0.20em] uppercase">
                     {s.id}
                   </span>
                 </div>
                 <p 
-                  className="mt-3 text-sm text-white/65 leading-relaxed"
+                  className="mt-3 text-base text-white/80 leading-relaxed"
                   style={{ transform: 'translateZ(5px)' }}
                 >
                   {s.description}
@@ -56,7 +56,7 @@ export function Services() {
                     {s.tags.map((t) => (
                       <span
                         key={t}
-                        className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-xs text-white/70 transition hover:bg-black/40 hover:border-white/20"
+                        className="rounded-full border border-accent-primary/30 bg-accent-primary/10 px-3 py-1 text-xs text-accent-primary font-medium tracking-wide transition hover:bg-accent-primary/20 hover:border-accent-primary/60"
                       >
                         {t}
                       </span>

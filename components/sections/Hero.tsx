@@ -11,25 +11,20 @@ export function Hero() {
   const { ref, rotateX, rotateY, handleMouseMove, handleMouseEnter, handleMouseLeave } = use3DTilt({
     maxRotation: 6
   });
-
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const [heroLoaded, setHeroLoaded] = useState(false);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    
     requestAnimationFrame(() => {
       setPrefersReducedMotion(mediaQuery.matches);
     });
-    
     const handleChange = (e: MediaQueryListEvent) => {
       requestAnimationFrame(() => {
         setPrefersReducedMotion(e.matches);
       });
     };
-    
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
@@ -38,151 +33,112 @@ export function Hero() {
     requestAnimationFrame(() => {
       setIsVisible(true);
     });
-    // Stagger hero content loading
     setTimeout(() => setHeroLoaded(true), 300);
   }, []);
 
   return (
-    <section id="top" className="relative overflow-hidden min-h-screen">
+    <section id="top" className="relative overflow-hidden min-h-screen flex items-center justify-center">
       {/* 3D WebGL Scene - visible behind content */}
       <ImmersiveExperience className="z-10" />
-      
-      {/* Original background with reduced opacity for depth layering */}
+      {/* Enhanced background for clarity & layering */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(1200px_circle_at_20%_10%,rgba(255,255,255,.05),transparent_55%),radial-gradient(900px_circle_at_70%_35%,rgba(255,255,255,.03),transparent_60%),linear-gradient(to_bottom,rgba(0,0,0,.40),rgba(0,0,0,.90),rgba(0,0,0,1))]" />
-        <div className="absolute inset-0 opacity-30 mix-blend-overlay bg-noise" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-zinc-900/95" />
+        <div className="absolute inset-0 opacity-40 mix-blend-overlay bg-noise" />
         <Image
           src="/hero/hero.jpg"
           alt="Studio tattoo: hero background"
           fill
           priority
-          className="object-cover object-center brightness-[0.65] contrast-110 saturate-80 opacity-50"
-          style={{ 
+          className="object-cover object-center brightness-[0.77] contrast-110 saturate-80 opacity-60"
+          style={{
             transform: prefersReducedMotion ? 'none' : 'scale(1.02)',
             transition: 'transform 0.8s ease-out'
           }}
         />
       </div>
 
-      <div 
+      <div
         ref={ref}
-        className="relative z-20"
+        className="relative z-20 w-full"
         style={{ perspective: '1200px' }}
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <div 
-          className="mx-auto max-w-6xl px-5 sm:px-6 pt-32 pb-20 sm:pt-44 sm:pb-32"
+        <div
+          className="mx-auto max-w-3xl px-6 py-24 md:py-36 bg-black/60 shadow-xl rounded-2xl backdrop-blur-md border border-white/10 flex flex-col items-center"
           style={{
             transformStyle: 'preserve-3d',
-            transform: prefersReducedMotion 
-              ? `translateY(${isVisible ? 0 : 30}px)` 
+            transform: prefersReducedMotion
+              ? `translateY(${isVisible ? 0 : 30}px)`
               : `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${isVisible ? 0 : 30}px)`,
-            transition: prefersReducedMotion 
-              ? 'transform 0.8s ease-out, opacity 0.8s ease-out'
-              : 'transform 0.15s ease-out, opacity 0.8s ease-out',
+            transition: prefersReducedMotion
+              ? 'transform 0.8s cubic-bezier(.22,1,.36,1), opacity 0.7s'
+              : 'transform 0.22s cubic-bezier(.22,1,.36,1), opacity 0.7s',
             opacity: isVisible ? 1 : 0
           }}
         >
-          <div className="max-w-3xl">
-            <h1 
-              className="max-w-[10ch] text-[2.35rem] sm:text-6xl font-semibold tracking-tight text-white leading-[0.98] sm:leading-[1.05]"
-              style={{ 
-                transform: prefersReducedMotion 
-                  ? `translateY(${isVisible ? 0 : 30}px) translateZ(20px)`
-                  : `translateY(${isVisible ? 0 : 30}px) translateZ(20px)`,
-                opacity: isVisible ? 1 : 0,
-                transition: prefersReducedMotion 
-                  ? 'transform 0.8s ease-out, opacity 0.8s ease-out'
-                  : 'transform 0.8s ease-out, opacity 0.8s ease-out'
-              }}
-            >
-              Arte sulla pelle.
-              <span className="block text-white/80">
-                Nero, luce, rito contemporaneo.
-              </span>
-            </h1>
+          <h1
+            className="text-4xl sm:text-6xl md:text-7xl text-center font-bold tracking-tight text-white mb-5 drop-shadow-xl max-w-[11ch]"
+            style={{
+              textShadow: '0 2px 36px #8b5cf633, 0 2px 6px #000c',
+            }}
+          >
+            Arte sulla <span className="text-accent-primary font-bold">pelle</span>.
+          </h1>
+          <span className="block text-white/85 text-xl sm:text-2xl text-center mb-7 ">
+            Nero, luce, rito contemporaneo.
+          </span>
+          <p
+            className="max-w-xl text-lg sm:text-xl text-white/70 leading-relaxed text-center mb-10"
+            style={{
+              opacity: heroLoaded ? 1 : 0,
+              transition: 'opacity 0.8s 0.12s'
+            }}
+          >
+            {site.tagline}
+          </p>
 
-            <p 
-              className="mt-5 max-w-xl text-[15px] sm:text-lg text-white/70 leading-relaxed"
-              style={{ 
-                transform: prefersReducedMotion 
-                  ? `translateY(${heroLoaded ? 0 : 30}px) translateZ(15px)`
-                  : `translateY(${heroLoaded ? 0 : 30}px) translateZ(15px)`,
-                opacity: heroLoaded ? 1 : 0,
-                transition: prefersReducedMotion 
-                  ? 'transform 0.8s ease-out 0.2s, opacity 0.8s ease-out 0.2s'
-                  : 'transform 0.8s ease-out 0.2s, opacity 0.8s ease-out 0.2s'
-              }}
+          {/* ONLY CTA PRIMARY prominently, secondary as subtle link below */}
+          <div className="flex flex-col items-center gap-5 w-full">
+            <Button
+              href={site.contacts.whatsappUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="w-full sm:w-auto btn-primary"
+              aria-label="Prenota subito su WhatsApp"
+              style={{ fontSize: "1.25rem", padding: '0.92em 2.35em', letterSpacing: "0.035em" }}
             >
-              {site.tagline}
-            </p>
+              {site.ctaPrimary}
+            </Button>
+            <a
+              href="#contatti"
+              className="mt-1 inline-block text-accent-primary text-base tracking-wide font-medium underline underline-offset-4 hover:text-white hover:bg-accent-primary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary rounded px-2 transition"
+            >
+              {site.ctaTertiary}
+            </a>
+          </div>
 
-            <div 
-              className="mt-10 flex flex-col sm:flex-row gap-3"
-              style={{ 
-                transform: prefersReducedMotion 
-                  ? `translateY(${heroLoaded ? 0 : 30}px) translateZ(25px)`
-                  : `translateY(${heroLoaded ? 0 : 30}px) translateZ(25px)`,
-                opacity: heroLoaded ? 1 : 0,
-                transition: prefersReducedMotion 
-                  ? 'transform 0.8s ease-out 0.4s, opacity 0.8s ease-out 0.4s'
-                  : 'transform 0.8s ease-out 0.4s, opacity 0.8s ease-out 0.4s'
-              }}
-            >
-              <Button
-                href={site.contacts.whatsappUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="w-full sm:w-auto"
+          {/* Quick Values as badge grid, more spacing and clarity */}
+          <div className="mt-12 grid grid-cols-1 min-[430px]:grid-cols-2 sm:grid-cols-4 gap-5 max-w-2xl w-full">
+            {[
+              { k: "Igiene", v: "Protocollo studio" },
+              { k: "Design", v: "Progetto su misura" },
+              { k: "Precisione", v: "Linee e ombre" },
+              { k: "Premium", v: "Esperienza dedicata" },
+            ].map((item, index) => (
+              <div
+                key={item.k}
+                className="rounded-xl border border-accent-primary/20 bg-zinc-900/60 px-5 py-4 flex flex-col gap-1 items-center shadow-md"
               >
-                {site.ctaPrimary}
-              </Button>
-              <Button href="#portfolio" variant="secondary" className="w-full sm:w-auto">
-                {site.ctaSecondary}
-              </Button>
-              <Button href="#contatti" variant="ghost" className="w-full sm:w-auto">
-                {site.ctaTertiary}
-              </Button>
-            </div>
-
-            <div 
-              className="mt-10 grid grid-cols-1 min-[430px]:grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl"
-              style={{ 
-                transform: prefersReducedMotion 
-                  ? `translateY(${heroLoaded ? 0 : 30}px) translateZ(10px)`
-                  : `translateY(${heroLoaded ? 0 : 30}px) translateZ(10px)`,
-                opacity: heroLoaded ? 1 : 0,
-                transition: prefersReducedMotion 
-                  ? 'transform 0.8s ease-out 0.6s, opacity 0.8s ease-out 0.6s'
-                  : 'transform 0.8s ease-out 0.6s, opacity 0.8s ease-out 0.6s'
-              }}
-            >
-              {[
-                { k: "Igiene", v: "Protocollo studio" },
-                { k: "Design", v: "Progetto su misura" },
-                { k: "Precisione", v: "Linee e ombre" },
-                { k: "Premium", v: "Esperienza dedicata" },
-              ].map((item, index) => (
-                <div
-                  key={item.k}
-                  className="rounded-2xl border border-white/10 bg-black/40 backdrop-blur-md px-4 py-4"
-                  style={{ 
-                    transform: prefersReducedMotion 
-                      ? `translateY(${heroLoaded ? 0 : 30}px) translateZ(5px)`
-                      : `translateY(${heroLoaded ? 0 : 30}px) translateZ(5px)`,
-                    opacity: heroLoaded ? 1 : 0,
-                    transition: prefersReducedMotion 
-                      ? `transform 0.8s ease-out ${0.6 + index * 0.1}s, opacity 0.8s ease-out ${0.6 + index * 0.1}s`
-                      : `transform 0.8s ease-out ${0.6 + index * 0.1}s, opacity 0.8s ease-out ${0.6 + index * 0.1}s`
-                  }}
-                >
-                  <p className="text-sm font-semibold text-white">{item.k}</p>
-                  <p className="mt-1 text-xs text-white/60">{item.v}</p>
-                </div>
-              ))}
-            </div>
+                <p className="text-base font-semibold tracking-tight text-white">
+                  {item.k}
+                </p>
+                <p className="text-xs text-accent-primary/90 font-medium">
+                  {item.v}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

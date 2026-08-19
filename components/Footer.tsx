@@ -8,32 +8,39 @@ export function Footer() {
           <p>
             © {new Date().getFullYear()} {site.brand}. Tutti i diritti riservati.
           </p>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-3 md:gap-4 items-center">
             <a
-              className="hover:text-white transition"
+              className="text-accent-primary hover:text-white/95 font-semibold transition underline underline-offset-4 rounded focus-visible:ring-2 focus-visible:ring-accent-primary px-2 py-1"
               href={site.contacts.instagramUrl}
               target="_blank"
               rel="noreferrer"
+              aria-label="Instagram Bolly Ink"
             >
               Instagram
             </a>
             <a
-              className="hover:text-white transition"
+              className="text-accent-primary hover:text-white/95 font-semibold transition underline underline-offset-4 rounded focus-visible:ring-2 focus-visible:ring-accent-primary px-2 py-1"
               href={site.contacts.tiktokUrl}
               target="_blank"
               rel="noreferrer"
+              aria-label="TikTok Bolly Ink"
             >
               TikTok
             </a>
             <a
-              className="hover:text-white transition"
+              className="text-accent-primary hover:text-white/95 font-semibold transition underline underline-offset-4 rounded focus-visible:ring-2 focus-visible:ring-accent-primary px-2 py-1"
               href={site.contacts.whatsappUrl}
               target="_blank"
               rel="noreferrer"
+              aria-label="WhatsApp Bolly Ink"
             >
               WhatsApp
             </a>
-            <a className="hover:text-white transition" href={`mailto:${site.contacts.email}`}>
+            <a 
+              className="text-accent-primary hover:text-white/95 font-semibold transition underline underline-offset-4 rounded focus-visible:ring-2 focus-visible:ring-accent-primary px-2 py-1" 
+              href={`mailto:${site.contacts.email}`}
+              aria-label="Invia una mail"
+            >
               Email
             </a>
           </div>

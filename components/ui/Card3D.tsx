@@ -48,17 +48,22 @@ export function Card3D({ children, className, depth = 'medium', disabled }: Card
   return (
     <div
       ref={ref}
-      className={cn('relative', className)}
+      className={cn('relative rounded-2xl border border-accent-primary/20 bg-zinc-900/50 shadow-lg transition hover:shadow-xl focus-within:shadow-xl focus-within:border-accent-primary/60', className)}
       style={{ 
         perspective: '1000px',
-        transformStyle: 'preserve-3d'
+        transformStyle: 'preserve-3d',
+        outline: isHovered ? '2.5px solid var(--accent-primary)' : undefined,
+        outlineOffset: isHovered ? '2px' : undefined
       }}
+      tabIndex={0}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      aria-label="Card interattiva di approfondimento"
+      role="group"
     >
       <div
-        className="relative transition-transform duration-100 ease-out"
+        className="relative transition-transform duration-150 ease-out"
         style={{
           transform: prefersReducedMotion || disabled 
             ? 'none' 

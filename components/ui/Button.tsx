@@ -26,15 +26,15 @@ export function Button({
   disabled = false,
 }: Props) {
   const base =
-    "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-4 py-3.5 text-[13px] sm:px-5 sm:py-3 text-center leading-none font-medium tracking-wide whitespace-nowrap transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:opacity-60 disabled:pointer-events-none";
+    "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-4 py-3.5 text-base sm:px-5 sm:py-3 text-center leading-none font-bold tracking-wide whitespace-nowrap transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/70 disabled:opacity-60 disabled:pointer-events-none";
 
   const variants: Record<NonNullable<Props["variant"]>, string> = {
     primary:
-      "bg-white text-black hover:bg-zinc-200 shadow-[0_0_0_1px_rgba(255,255,255,.15),0_14px_50px_-20px_rgba(255,255,255,.5)]",
+      "bg-accent-primary text-white hover:bg-accent-primary-darker shadow-[0_3px_26px_-7px_var(--accent-primary)]",
     secondary:
-      "bg-white/10 text-white hover:bg-white/15 shadow-[0_0_0_1px_rgba(255,255,255,.12)] backdrop-blur-md",
+      "bg-transparent text-accent-primary border-2 border-accent-primary hover:bg-accent-primary hover:text-white shadow-none",
     ghost:
-      "bg-transparent text-white hover:bg-white/10 shadow-[0_0_0_1px_rgba(255,255,255,.10)]",
+      "bg-transparent text-accent-primary hover:text-white hover:bg-accent-primary/20",
   };
 
   const classes = cn(base, variants[variant], className);

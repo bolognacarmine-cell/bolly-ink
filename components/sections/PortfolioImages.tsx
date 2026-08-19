@@ -50,7 +50,7 @@ export function PortfolioImages({ images }: Props) {
             <p className="text-xs tracking-[0.22em] uppercase text-white/60">
               Portfolio immagini
             </p>
-            <h2 className="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-white">
+            <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight text-accent-primary drop-shadow-lg">
               Lavori recenti. Solo immagini.
             </h2>
             <p className="mt-3 max-w-2xl text-sm text-white/60 leading-relaxed">
@@ -67,10 +67,10 @@ export function PortfolioImages({ images }: Props) {
                   key={s}
                   onClick={() => setStyle(s)}
                   className={cn(
-                    "shrink-0 rounded-full border px-4 py-2.5 text-xs uppercase tracking-[0.20em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
+                    "shrink-0 rounded-full border px-4 py-2.5 text-xs uppercase tracking-[0.20em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/60 font-semibold",
                     style === s
-                      ? "border-white/30 bg-white/10 text-white"
-                      : "border-white/10 bg-black/20 text-white/60 hover:text-white hover:bg-white/5",
+                      ? "border-accent-primary/60 bg-accent-primary/10 text-accent-primary shadow-lg"
+                      : "border-accent-primary/15 bg-black/10 text-white/60 hover:text-accent-primary hover:bg-accent-primary/10",
                   )}
                 >
                   {s}

@@ -12,11 +12,11 @@ export function Section({ id, className, children }: Props) {
     <section
       id={id}
       className={cn(
-        "relative w-full py-20 sm:py-24 scroll-mt-20",
+        "relative w-full py-16 sm:py-24 scroll-mt-24",
         className,
       )}
     >
-      <div className="mx-auto w-full max-w-6xl px-5 sm:px-6">{children}</div>
+      <div className="mx-auto w-full max-w-6xl px-3 sm:px-6">{children}</div>
     </section>
   );
 }
