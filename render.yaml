@@ -1,0 +1,12 @@
+services:
+  # Production web service
+  - type: web
+    name: bolly-ink
+    env: node
+    buildCommand: npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+    plan: free
+    region: oregon
