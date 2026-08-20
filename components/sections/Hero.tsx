@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { site } from "@/data/site";
 import { use3DTilt } from "@/hooks/use3DTilt";
-import { ImmersiveExperience } from "@/components/immersive/ImmersiveExperience";
+import { HeroImmersive } from "@/components/HeroImmersive";
 import { useEffect, useState } from "react";
 
 export function Hero() {

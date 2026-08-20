@@ -1,6 +1,34 @@
 Sito dark luxury per tatuatore, costruito con [Next.js](https://nextjs.org) + Tailwind.
 
-## Avvio rapido
+## Esperienza immersiva
+
+### Concept visivo e direzione artistica
+
+L’homepage e la Hero offrono un ambiente 3D immersivo ispirato all’estetica luxury dark: luci calde e riflessi metallici risaltano un grande ago stilizzato che disegna nello spazio filamenti di inchiostro. L’effetto richiama il gesto contemporaneo e sacro della tattoo art, tra tecnologia, luce, materia e rito. L’atmosfera è evocativa, materica, elegante, integrata con la palette nero/viola/oro e dettagli soft glow.
+
+### Obiettivo narrativo della pagina
+
+Coinvolgere l’utente immergendolo nell’universo artistico dello studio, trasmettendo cura del dettaglio, professionalità ed esclusività. L’esperienza comunica subito il valore del brand attraverso elementi visuali e micro-animazioni che scandiscono il percorso dall’arrivo fino all’invito alla prenotazione.
+
+### Percorso dell’utente dalla Hero alla CTA
+
+1. L’utente atterra su una hero immersiva 3D con ago, filamenti e particelle, che reagisce a movimento e scroll.
+2. Le animazioni guidano lo sguardo: da un’inquadratura iniziale suggestiva, il focus si sposta verso la presentazione dei valori e la call to action (“Prenota subito su WhatsApp” o "Contattami").
+3. Continuando a scorrere, la scena 3D accompagna dolcemente la transizione verso i contenuti portfolio, video, e aree informative.
+4. L’intera esperienza crea una narrazione fluida che culmina nella CTA primaria, sempre accessibile, invitando alla prenotazione esclusiva.
+
+### Ruolo del 3D rispetto ai contenuti HTML
+
+La scena 3D non sostituisce mai i contenuti informativi, ma li avvolge e li esalta come un layer immersivo visivo. I contenuti testuali e le CTA restano completamente accessibili in HTML per SEO e accessibilità. Il 3D fornisce profondità emozionale, transizioni fluide e ambientazioni di forte impatto, arricchendo la percezione senza bloccare la navigazione o la leggibilità.
+
+### Palette colori, tipografia, luci, materiali e atmosfera
+
+- **Colori**: Dominante nero profondo, tocchi di viola/fucsia glow, oro caldo per i riflessi metallici. Accenti bianco caldo per la light key e ombreggiature blu per il fill.
+- **Tipografia**: Titoli in Cinzel (serif elegante, branding premium), testi e CTA in Inter (neo-grotesk pulito e leggibile).
+- **Luci**: Light rig cinematografico con key chiaro, fill blu freddo, rim neutro e ambient scuro per profondità.
+- **Materiali scene**: Mix di metalli spazzolati (needle, dettagli) e shader custom per filamenti di inchiostro, particelle soft glow e trasparenze delicate.
+- **Atmosfera**: Evocativa, rarefatta, di grande eleganza ed espressività. Texture leggere/grain, effetto fog e transizioni morbide.
+
 
 1. Installa dipendenze
 
