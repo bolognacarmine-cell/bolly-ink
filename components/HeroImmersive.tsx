@@ -19,20 +19,14 @@ const Hero3D = dynamic(() => import("@/components/Hero3D").then(m => m.Hero3D), 
 });
 
 export function HeroImmersive({ className = "" }: { className?: string }) {
-  const [enabled, setEnabled] = useState(false);
-
-  useEffect(() => {
-    // Minimum features needed
-    if (typeof window === "undefined") return;
-    const isMobile = window.innerWidth < 768;
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setEnabled(!isMobile && !prefersReducedMotion);
-  }, []);
-
-  if (!enabled) {
-    // Fallback: nulla se non supportato/consentito
-    return null;
-  }
-
-  return <Hero3D className={className} />;
+  // Force 3D rendering for testing - remove all restrictions
+  console.log('[HeroImmersive] 3D forced enabled for testing');
+  return (
+    <>
+      <div className="fixed top-4 left-4 z-50 bg-red-500 text-white px-4 py-2 text-sm font-bold">
+        HeroImmersive LOADED
+      </div>
+      <Hero3D className={className} />
+    </>
+  );
 }

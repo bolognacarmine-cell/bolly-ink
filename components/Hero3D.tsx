@@ -68,19 +68,13 @@ export function Hero3D({ className }: Hero3DProps) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Skip 3D on mobile or if reduced motion is preferred
-    if (isMobile || prefersReducedMotion) {
-      requestAnimationFrame(() => {
-        setIsLoading(false);
-        setIsLoaded(true);
-      });
-      return;
-    }
+    console.log('[Hero3D] Starting 3D scene initialization');
 
+    // Skip restrictions for testing - force 3D rendering
     // Check WebGL support using performance manager
     const performanceManager = getPerformanceManager();
     if (!performanceManager.isWebGLAvailable()) {
-      console.warn('WebGL not supported');
+      console.error('[Hero3D] WebGL not supported');
       requestAnimationFrame(() => {
         setHasError(true);
         setIsLoading(false);
@@ -94,6 +88,8 @@ export function Hero3D({ className }: Hero3DProps) {
         setIsLoading(true);
       });
       
+      console.log('[Hero3D] Creating Scene3D instance');
+      
       // Simulate loading delay for smoother experience
       const loadingTimeout = setTimeout(() => {
         setIsLoading(false);
@@ -102,11 +98,15 @@ export function Hero3D({ className }: Hero3DProps) {
       const scene = new Scene3D(canvas);
       sceneRef.current = scene;
       scene.init();
+      
+      console.log('[Hero3D] Scene3D initialized successfully');
 
       // Get performance manager for adaptive quality
       const performanceManager = getPerformanceManager();
       const isLowEnd = performanceManager.isLowEnd();
       const pixelRatio = performanceManager.getPixelRatio();
+      
+      console.log('[Hero3D] Performance settings:', { isLowEnd, pixelRatio });
 
       // Setup camera with FOV 45 and position (0, 0, 12)
       const camera = scene.getCamera();
@@ -117,6 +117,8 @@ export function Hero3D({ className }: Hero3DProps) {
       // Cinematic lighting setup
       const scene3D = scene.getScene();
       
+      console.log('[Hero3D] Setting up lighting');
+
       // Key light (warm white, creates shadows and metallic reflections)
       const keyLight = new THREE.SpotLight(0xfff5e6, 2.0);
       keyLight.position.set(5, 5, 8);
@@ -141,6 +143,8 @@ export function Hero3D({ className }: Hero3DProps) {
 
       // Fog for depth (FogExp2 with density 0.02)
       scene3D.fog = new THREE.FogExp2(0x070707, 0.02);
+
+      console.log('[Hero3D] Creating needle object');
 
       // Create stylized needle
       const needleGroup = new THREE.Group();
@@ -198,9 +202,11 @@ export function Hero3D({ className }: Hero3DProps) {
       // Scale the needle for visibility (35-50% of visual area)
       needleGroup.scale.set(2.5, 2.5, 2.5);
       scene3D.add(needleGroup);
+      
+      console.log('[Hero3D] Needle added to scene');
 
       // Create ink filaments (only if not low-end)
-      const filamentCount = isLowEnd ? 0 : (isMobile ? 2 : 4);
+      const filamentCount = isLowEnd ? 0 : 4; // Force 4 filaments for testing
       const filamentsGroup = new THREE.Group();
       filamentsRef.current = filamentsGroup;
 
@@ -240,7 +246,9 @@ export function Hero3D({ className }: Hero3DProps) {
       }
 
       // Create particles (adaptive count based on device)
-      const particleCount = isLowEnd ? 0 : (isMobile ? 50 : 200);
+      const particleCount = isLowEnd ? 0 : 200; // Force 200 particles for testing
+      
+      console.log('[Hero3D] Creating particles:', particleCount);
       
       if (particleCount > 0) {
         const particleGeometry = new THREE.BufferGeometry();
@@ -418,6 +426,7 @@ export function Hero3D({ className }: Hero3DProps) {
       requestAnimationFrame(() => {
         setIsLoading(false);
         setIsLoaded(true);
+        console.log('[Hero3D] Scene fully loaded and ready');
       });
 
       // Cleanup
@@ -454,22 +463,17 @@ export function Hero3D({ className }: Hero3DProps) {
   }, []);
 
   return (
-    <div className={`absolute inset-0 w-full h-full ${className || ''}`}>
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-          <LoadingSpinner size="lg" />
+    <div className={`absolute inset-0 ${className}`}>
+      {isLoading && <LoadingSpinner size="lg" />}
+      {hasError && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/80">
+          <p className="text-white text-center px-4">Esperienza 3D non disponibile</p>
         </div>
       )}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full"
-        style={{ 
-          opacity: isLoaded && !isLoading ? 1 : 0,
-          transition: 'opacity 0.5s ease-out'
-        }}
-        aria-label="Scena 3D interattiva con ago stilizzato e filamenti d'inchiostro"
-        role="img"
-      />
+      <div className="fixed top-12 left-4 z-50 bg-blue-500 text-white px-4 py-2 text-sm font-bold">
+        Hero3D LOADED
+      </div>
+      <canvas ref={canvasRef} className="w-full h-full" />
     </div>
   );
 }
