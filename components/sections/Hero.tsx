@@ -39,7 +39,7 @@ export function Hero() {
   return (
     <section id="top" className="relative overflow-hidden min-h-screen flex items-center justify-center">
       {/* 3D WebGL Scene - visible behind content */}
-      <ImmersiveExperience className="z-10" />
+      <HeroImmersive className="z-10" />
       {/* Enhanced background for clarity & layering */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-zinc-900/95" />
