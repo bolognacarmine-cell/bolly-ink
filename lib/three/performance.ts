@@ -24,5 +24,3 @@ export function getPixelRatio(): number {
   if (isLowEndDevice()) return 1;
   return Math.min(window.devicePixelRatio || 1, 2.2);
 }
-
-export { isWebGLAvailable };
