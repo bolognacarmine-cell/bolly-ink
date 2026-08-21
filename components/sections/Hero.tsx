@@ -38,24 +38,25 @@ export function Hero() {
 
   return (
     <section id="top" className="relative overflow-hidden min-h-screen flex items-center justify-center">
-      {/* 3D WebGL Scene - visible behind content */}
-      <HeroImmersive className="z-10" />
-      {/* Enhanced background for clarity & layering */}
+      {/* Background layers: image + subtle gradients (UNDER the 3D scene) */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-zinc-900/95" />
-        <div className="absolute inset-0 opacity-40 mix-blend-overlay bg-noise" />
         <Image
           src="/hero/hero.jpg"
           alt="Studio tattoo: hero background"
           fill
           priority
-          className="object-cover object-center brightness-[0.77] contrast-110 saturate-80 opacity-60"
+          className="object-cover object-center brightness-[0.55] contrast-110 saturate-70 opacity-40"
           style={{
             transform: prefersReducedMotion ? 'none' : 'scale(1.02)',
             transition: 'transform 0.8s ease-out'
           }}
         />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/75" />
+        <div className="absolute inset-0 opacity-25 mix-blend-overlay bg-noise" />
       </div>
+
+      {/* 3D WebGL Scene - between background and content */}
+      <HeroImmersive className="z-10" />
 
       <div
         ref={ref}

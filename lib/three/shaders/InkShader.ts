@@ -25,6 +25,8 @@ void main() {
 
 export const inkFragmentShader = `
 uniform vec3 uColor;
+uniform vec3 uEmissive;
+uniform float uEmissiveIntensity;
 uniform float uOpacity;
 uniform float uTime;
 uniform float uScrollProgress;
@@ -62,11 +64,15 @@ void main() {
   float edge = 1.0 - abs(vDistortion) * 2.0;
   
   // Final opacity with all factors
-  float finalOpacity = uOpacity * gradient * (0.8 + noiseValue) * edge;
+  float finalOpacity = uOpacity * gradient * (0.8 + noiseValue) * max(edge, 0.0);
   
   // Scroll-based opacity change
-  finalOpacity *= (1.0 - uScrollProgress * 0.5);
+  finalOpacity *= (1.0 - uScrollProgress * 0.4);
   
-  gl_FragColor = vec4(uColor, finalOpacity);
+  // Combine base color with emissive glow for visibility
+  vec3 finalColor = mix(uColor, uEmissive, uEmissiveIntensity * 0.55);
+  finalColor += uEmissive * uEmissiveIntensity * 0.35;
+  
+  gl_FragColor = vec4(finalColor, clamp(finalOpacity, 0.0, 1.0));
 }
 `;

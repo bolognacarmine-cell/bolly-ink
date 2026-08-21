@@ -1,10 +1,10 @@
 'use client';
 
-import { useRef, useMemo, useEffect, useState, Suspense } from 'react';
+import { useRef, useMemo, useEffect, useState, Suspense, Component, type ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Environment, Float, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
-import { PALETTE, LIGHTING, NEEDLE, INK, PARTICLES } from '@/lib/three/constants';
+import { PALETTE, LIGHTING, NEEDLE, INK, PARTICLES, FOG } from '@/lib/three/constants';
 import { useScenePerformance } from '@/hooks/useScenePerformance';
 import { usePrefersReducedMotion } from '@/hooks/useMediaQuery';
 import { inkVertexShader, inkFragmentShader } from '@/lib/three/shaders/InkShader';
@@ -12,13 +12,31 @@ import { glowVertexShader, glowFragmentShader } from '@/lib/three/shaders/GlowSh
 import { SceneLoader } from './SceneLoader';
 import { SceneFallback } from './SceneFallback';
 
+class SceneErrorBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { hasError: boolean }> {
+  constructor(props: { children: ReactNode; fallback: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(error: unknown) {
+    if (typeof window !== 'undefined') {
+      console.warn('[ImmersiveScene] 3D rendering error caught:', error);
+    }
+  }
+  render() {
+    if (this.state.hasError) return this.props.fallback;
+    return this.props.children;
+  }
+}
+
 function Needle({ scrollProgress = 0, mouseX = 0, mouseY = 0, reducedMotion = false }: { scrollProgress?: number; mouseX?: number; mouseY?: number; reducedMotion?: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const rotX = useRef(0);
   const rotY = useRef(0);
   const rotZ = useRef(0);
 
-  // eslint-disable-next-line react-hooks/immutability,react-hooks/purity
   useFrame(() => {
     if (!groupRef.current) return;
     if (reducedMotion) {
@@ -55,6 +73,8 @@ function Needle({ scrollProgress = 0, mouseX = 0, mouseY = 0, reducedMotion = fa
         <cylinderGeometry args={[0.075, 0.075, 6, 32]} />
         <meshStandardMaterial
           color={NEEDLE.body.color}
+          emissive={NEEDLE.body.emissive}
+          emissiveIntensity={NEEDLE.body.emissiveIntensity}
           metalness={NEEDLE.body.metalness}
           roughness={NEEDLE.body.roughness}
           envMapIntensity={NEEDLE.body.envMapIntensity}
@@ -64,6 +84,8 @@ function Needle({ scrollProgress = 0, mouseX = 0, mouseY = 0, reducedMotion = fa
         <coneGeometry args={[0.075, 1.5, 32]} />
         <meshStandardMaterial
           color={NEEDLE.tip.color}
+          emissive={NEEDLE.tip.emissive}
+          emissiveIntensity={NEEDLE.tip.emissiveIntensity}
           metalness={NEEDLE.tip.metalness}
           roughness={NEEDLE.tip.roughness}
         />
@@ -72,6 +94,8 @@ function Needle({ scrollProgress = 0, mouseX = 0, mouseY = 0, reducedMotion = fa
         <cylinderGeometry args={[0.125, 0.125, 2, 32]} />
         <meshStandardMaterial
           color={NEEDLE.grip.color}
+          emissive={NEEDLE.grip.emissive}
+          emissiveIntensity={NEEDLE.grip.emissiveIntensity}
           metalness={NEEDLE.grip.metalness}
           roughness={NEEDLE.grip.roughness}
         />
@@ -80,6 +104,8 @@ function Needle({ scrollProgress = 0, mouseX = 0, mouseY = 0, reducedMotion = fa
         <cylinderGeometry args={[0.1, 0.1, 0.2, 32]} />
         <meshStandardMaterial
           color={NEEDLE.detail.color}
+          emissive={NEEDLE.detail.emissive}
+          emissiveIntensity={NEEDLE.detail.emissiveIntensity}
           metalness={NEEDLE.detail.metalness}
           roughness={NEEDLE.detail.roughness}
         />
@@ -96,6 +122,8 @@ function InkFilaments({ count = 4, scrollProgress = 0, reducedMotion = false }: 
   const uniforms = useMemo(() => ({
     uTime: { value: 0 },
     uColor: { value: new THREE.Color(INK.filament.color) },
+    uEmissive: { value: new THREE.Color(INK.filament.emissive) },
+    uEmissiveIntensity: { value: INK.filament.emissiveIntensity },
     uDistortion: { value: INK.filament.distortion },
     uOpacity: { value: INK.filament.opacity },
     uScrollProgress: { value: 0 },
@@ -149,27 +177,25 @@ function GlowParticles({ count = 200, scrollProgress = 0, reducedMotion = false,
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const timeRef = useRef(0);
 
-  const { positions, sizes, alphas } = useMemo(() => {
-    // eslint-disable-next-line react-hooks/purity
-    const p = new Float32Array(count * 3);
-    const s = new Float32Array(count);
-    const a = new Float32Array(count);
+  const geometry = useMemo(() => {
+    const geom = new THREE.BufferGeometry();
+    const positions = new Float32Array(count * 3);
+    const sizes = new Float32Array(count);
+    const alphas = new Float32Array(count);
     for (let i = 0; i < count; i++) {
-      // eslint-disable-next-line react-hooks/purity
       const angle = Math.random() * Math.PI * 2;
-      // eslint-disable-next-line react-hooks/purity
       const radius = 2 + Math.random() * 6;
-      // eslint-disable-next-line react-hooks/purity
       const height = (Math.random() - 0.5) * 8;
-      p[i * 3] = Math.cos(angle) * radius;
-      p[i * 3 + 1] = height;
-      p[i * 3 + 2] = Math.sin(angle) * radius - 2;
-      // eslint-disable-next-line react-hooks/purity
-      s[i] = 0.05 + Math.random() * 0.1;
-      // eslint-disable-next-line react-hooks/purity
-      a[i] = 0.3 + Math.random() * 0.4;
+      positions[i * 3] = Math.cos(angle) * radius;
+      positions[i * 3 + 1] = height;
+      positions[i * 3 + 2] = Math.sin(angle) * radius - 2;
+      sizes[i] = 0.08 + Math.random() * 0.14;
+      alphas[i] = 0.45 + Math.random() * 0.45;
     }
-    return { positions: p, sizes: s, alphas: a };
+    geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geom.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
+    geom.setAttribute('aAlpha', new THREE.BufferAttribute(alphas, 1));
+    return geom;
   }, [count]);
 
   const uniforms = useMemo(() => ({
@@ -179,21 +205,20 @@ function GlowParticles({ count = 200, scrollProgress = 0, reducedMotion = false,
     uPixelRatio: { value: pixelRatio },
   }), [pixelRatio]);
 
-  // eslint-disable-next-line react-hooks/immutability,react-hooks/purity
   useFrame((state, delta) => {
     if (reducedMotion || !pointsRef.current) return;
     timeRef.current += delta;
     if (materialRef.current) {
       materialRef.current.uniforms.uTime.value = timeRef.current;
     }
-    const geom = pointsRef.current.geometry;
-    if (geom.attributes.position) {
-      const pos = geom.attributes.position.array as Float32Array;
+    const posAttr = pointsRef.current.geometry.getAttribute('position') as THREE.BufferAttribute;
+    if (posAttr) {
+      const pos = posAttr.array as Float32Array;
       for (let i = 0; i < count; i++) {
         const iy = i * 3 + 1;
         pos[iy] += Math.sin(timeRef.current + i) * 0.001 * delta * 60;
       }
-      geom.attributes.position.needsUpdate = true;
+      posAttr.needsUpdate = true;
     }
     pointsRef.current.position.z = scrollProgress * -2;
     pointsRef.current.scale.setScalar(1 + scrollProgress * 0.5);
@@ -202,12 +227,7 @@ function GlowParticles({ count = 200, scrollProgress = 0, reducedMotion = false,
   if (count === 0) return null;
 
   return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-        <bufferAttribute attach="attributes-aSize" args={[sizes, 1]} />
-        <bufferAttribute attach="attributes-aAlpha" args={[alphas, 1]} />
-      </bufferGeometry>
+    <points ref={pointsRef} geometry={geometry}>
       <shaderMaterial
         ref={materialRef}
         vertexShader={glowVertexShader}
@@ -225,8 +245,6 @@ function SceneCamera({ mouseX = 0, mouseY = 0, scrollProgress = 0, reducedMotion
   const { camera } = useThree();
   const posX = useRef(0);
   const posY = useRef(0);
-
-  // Inizializzazione camera gia configurata nel padre (Canvas)
 
   useFrame(() => {
     if (reducedMotion) {
@@ -287,7 +305,72 @@ function SceneLightingRig({ enableShadows = true }: { enableShadows?: boolean })
         intensity={LIGHTING.rim.intensity}
         position={LIGHTING.rim.position as [number, number, number]}
       />
-      <fogExp2 attach="fog" args={[PALETTE.fog, 0.02]} />
+      <pointLight
+        color={LIGHTING.accentPoint.color}
+        intensity={LIGHTING.accentPoint.intensity}
+        position={LIGHTING.accentPoint.position as [number, number, number]}
+      />
+      <fogExp2 attach="fog" args={[FOG.color, FOG.density]} />
+    </>
+  );
+}
+
+function SceneContents({
+  perf,
+  reducedMotion,
+  mouseX,
+  mouseY,
+  scrollProgress,
+}: {
+  perf: ReturnType<typeof useScenePerformance>;
+  reducedMotion: boolean;
+  mouseX: number;
+  mouseY: number;
+  scrollProgress: number;
+}) {
+  const filamentCount = reducedMotion ? 0 : perf.maxFilaments;
+  const particleCount = reducedMotion ? 0 : perf.maxParticles;
+
+  return (
+    <>
+      <SceneLightingRig enableShadows={perf.enableShadows} />
+      <SceneCamera
+        mouseX={mouseX}
+        mouseY={mouseY}
+        scrollProgress={scrollProgress}
+        reducedMotion={reducedMotion}
+      />
+      <Float speed={reducedMotion ? 0 : 1.2} rotationIntensity={reducedMotion ? 0 : 0.3} floatIntensity={reducedMotion ? 0 : 0.6}>
+        <Needle
+          scrollProgress={scrollProgress}
+          mouseX={mouseX}
+          mouseY={mouseY}
+          reducedMotion={reducedMotion}
+        />
+      </Float>
+      <InkFilaments
+        count={filamentCount}
+        scrollProgress={scrollProgress}
+        reducedMotion={reducedMotion}
+      />
+      <GlowParticles
+        count={particleCount}
+        scrollProgress={scrollProgress}
+        reducedMotion={reducedMotion}
+        pixelRatio={perf.pixelRatio}
+      />
+      <ContactShadows
+        position={[0, -2.5, 0]}
+        opacity={0.35}
+        scale={24}
+        blur={3.2}
+        far={8}
+        resolution={512}
+        color="#0a0616"
+      />
+      {perf.level === 'high' && (
+        <Environment preset="night" />
+      )}
     </>
   );
 }
@@ -299,7 +382,7 @@ export function ImmersiveScene({ className = '' }: { className?: string }) {
   const [mouseX, setMouseX] = useState(0);
   const [mouseY, setMouseY] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [hasError, setHasError] = useState(false);
+  const [canvasMounted, setCanvasMounted] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -307,7 +390,10 @@ export function ImmersiveScene({ className = '' }: { className?: string }) {
       if (cancelled) return;
       try {
         const c = document.createElement('canvas');
-        const ok = !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')));
+        const ok = !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl') || c.getContext('experimental-webgl')));
+        if (typeof window !== 'undefined') {
+          console.debug('[ImmersiveScene] WebGL support detected:', ok);
+        }
         setWebglOk(ok);
       } catch {
         setWebglOk(false);
@@ -317,8 +403,7 @@ export function ImmersiveScene({ className = '' }: { className?: string }) {
       cancelled = true;
       window.clearTimeout(t);
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  }, [] as any[]);
+  }, []);
 
   useEffect(() => {
     if (reducedMotion || perf.level === 'low') return;
@@ -344,67 +429,61 @@ export function ImmersiveScene({ className = '' }: { className?: string }) {
     };
   }, [reducedMotion, perf.level]);
 
-  const filamentCount = reducedMotion ? 0 : perf.maxFilaments;
-  const particleCount = reducedMotion ? 0 : perf.maxParticles;
-
-  if (!webglOk || hasError) return <SceneFallback />;
+  if (!webglOk) {
+    if (typeof window !== 'undefined') {
+      console.warn('[ImmersiveScene] WebGL not available, showing fallback');
+    }
+    return <SceneFallback />;
+  }
 
   return (
-    <div className={`absolute inset-0 w-full h-full ${className}`} onError={() => setHasError(true)}>
-      <Suspense fallback={<SceneLoader />}>
-        <Canvas
-          dpr={[1, perf.pixelRatio]}
-          gl={{
-            antialias: perf.level === 'high',
-            alpha: true,
-            powerPreference: perf.level === 'low' ? 'low-power' : 'high-performance',
-            stencil: false,
-            depth: true,
-          }}
-          camera={{ fov: 45, position: [0, 0, 12] }}
-          frameloop={reducedMotion ? 'demand' : 'always'}
-          style={{ background: 'transparent' }}
-        >
-          <SceneLightingRig enableShadows={perf.enableShadows} />
-          <SceneCamera
-            mouseX={mouseX}
-            mouseY={mouseY}
-            scrollProgress={scrollProgress}
-            reducedMotion={reducedMotion}
-          />
-          <Float speed={reducedMotion ? 0 : 1.2} rotationIntensity={reducedMotion ? 0 : 0.3} floatIntensity={reducedMotion ? 0 : 0.6}>
-            <Needle
-              scrollProgress={scrollProgress}
-              mouseX={mouseX}
-              mouseY={mouseY}
-              reducedMotion={reducedMotion}
-            />
-          </Float>
-          <InkFilaments
-            count={filamentCount}
-            scrollProgress={scrollProgress}
-            reducedMotion={reducedMotion}
-          />
-          <GlowParticles
-            count={particleCount}
-            scrollProgress={scrollProgress}
-            reducedMotion={reducedMotion}
-            pixelRatio={perf.pixelRatio}
-          />
-          <ContactShadows
-            position={[0, -4, 0]}
-            opacity={0.25}
-            scale={20}
-            blur={2.4}
-            far={6}
-            resolution={256}
-            color="#000000"
-          />
-          {perf.level === 'high' && (
-            <Environment preset="night" />
-          )}
-        </Canvas>
-      </Suspense>
+    <div
+      className={`absolute inset-0 w-full h-full block ${className}`}
+      style={{
+        pointerEvents: 'none',
+        opacity: canvasMounted ? 1 : 0,
+        transition: 'opacity 0.6s ease-out',
+      }}
+      data-immersive-scene
+    >
+      <SceneErrorBoundary fallback={<SceneFallback />}>
+        <Suspense fallback={<SceneLoader />}>
+            <Canvas
+              dpr={[1, perf.pixelRatio]}
+              gl={{
+                antialias: perf.level === 'high',
+                alpha: true,
+                powerPreference: perf.level === 'low' ? 'low-power' : 'high-performance',
+                stencil: false,
+                depth: true,
+                failIfMajorPerformanceCaveat: false,
+              }}
+              camera={{ fov: 45, position: [0, 0, 12], near: 0.1, far: 200 }}
+              frameloop={reducedMotion ? 'demand' : 'always'}
+              onCreated={() => {
+                setCanvasMounted(true);
+                if (typeof window !== 'undefined') {
+                  console.debug('[ImmersiveScene] Canvas mounted successfully');
+                }
+              }}
+              style={{
+                background: 'transparent',
+                width: '100%',
+                height: '100%',
+                display: 'block',
+              }}
+              data-canvas-debug
+            >
+              <SceneContents
+                perf={perf}
+                reducedMotion={reducedMotion}
+                mouseX={mouseX}
+                mouseY={mouseY}
+                scrollProgress={scrollProgress}
+              />
+            </Canvas>
+          </Suspense>
+      </SceneErrorBoundary>
     </div>
   );
 }
