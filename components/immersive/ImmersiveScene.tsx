@@ -22,7 +22,7 @@ class SceneErrorBoundary extends Component<{ children: ReactNode; fallback: Reac
   }
   componentDidCatch(error: unknown) {
     if (typeof window !== 'undefined') {
-      console.warn('[ImmersiveScene] 3D rendering error caught:', error);
+      console.error('[ImmersiveScene] 3D rendering error caught:', error);
     }
   }
   render() {
@@ -36,9 +36,14 @@ function Needle({ scrollProgress = 0, mouseX = 0, mouseY = 0, reducedMotion = fa
   const rotX = useRef(0);
   const rotY = useRef(0);
   const rotZ = useRef(0);
+  const loggedOnce = useRef(false);
 
   useFrame(() => {
     if (!groupRef.current) return;
+    if (!loggedOnce.current && typeof window !== 'undefined') {
+      console.debug('[Needle] Needle mesh mounted in 3D scene. Initial position visible.');
+      loggedOnce.current = true;
+    }
     if (reducedMotion) {
       groupRef.current.rotation.set(0, 0, 0);
       groupRef.current.position.set(0, 0, 0);
@@ -85,7 +90,7 @@ function Needle({ scrollProgress = 0, mouseX = 0, mouseY = 0, reducedMotion = fa
         <meshStandardMaterial
           color={NEEDLE.tip.color}
           emissive={NEEDLE.tip.emissive}
-          emissiveIntensity={NEEDLE.tip.emissiveIntensity}
+          emissiveIntensity={NEEDLE.tip.emissiveIntensity + 0.3}
           metalness={NEEDLE.tip.metalness}
           roughness={NEEDLE.tip.roughness}
         />
@@ -105,9 +110,20 @@ function Needle({ scrollProgress = 0, mouseX = 0, mouseY = 0, reducedMotion = fa
         <meshStandardMaterial
           color={NEEDLE.detail.color}
           emissive={NEEDLE.detail.emissive}
-          emissiveIntensity={NEEDLE.detail.emissiveIntensity}
+          emissiveIntensity={NEEDLE.detail.emissiveIntensity + 0.25}
           metalness={NEEDLE.detail.metalness}
           roughness={NEEDLE.detail.roughness}
+        />
+      </mesh>
+      {/* Big bright pivot sphere as visual anchor — guarantees something visible */}
+      <mesh position={[0, 0, 0]}>
+        <sphereGeometry args={[0.35, 32, 32]} />
+        <meshStandardMaterial
+          color={0xa78bfa}
+          emissive={0x8b5cf6}
+          emissiveIntensity={1.6}
+          metalness={0.3}
+          roughness={0.4}
         />
       </mesh>
     </group>
@@ -189,8 +205,8 @@ function GlowParticles({ count = 200, scrollProgress = 0, reducedMotion = false,
       positions[i * 3] = Math.cos(angle) * radius;
       positions[i * 3 + 1] = height;
       positions[i * 3 + 2] = Math.sin(angle) * radius - 2;
-      sizes[i] = 0.08 + Math.random() * 0.14;
-      alphas[i] = 0.45 + Math.random() * 0.45;
+      sizes[i] = 0.1 + Math.random() * 0.18;
+      alphas[i] = 0.55 + Math.random() * 0.45;
     }
     geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     geom.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
@@ -201,7 +217,7 @@ function GlowParticles({ count = 200, scrollProgress = 0, reducedMotion = false,
   const uniforms = useMemo(() => ({
     uTime: { value: 0 },
     uColor: { value: new THREE.Color(PARTICLES.color) },
-    uSize: { value: 1.0 },
+    uSize: { value: 1.2 },
     uPixelRatio: { value: pixelRatio },
   }), [pixelRatio]);
 
@@ -245,8 +261,13 @@ function SceneCamera({ mouseX = 0, mouseY = 0, scrollProgress = 0, reducedMotion
   const { camera } = useThree();
   const posX = useRef(0);
   const posY = useRef(0);
+  const loggedOnce = useRef(false);
 
   useFrame(() => {
+    if (!loggedOnce.current && typeof window !== 'undefined') {
+      console.debug('[SceneCamera] Camera active. Initial pos:', camera.position.toArray());
+      loggedOnce.current = true;
+    }
     if (reducedMotion) {
       camera.position.set(0, 0, 12);
       camera.lookAt(0, 0, 0);
@@ -286,7 +307,13 @@ function SceneCamera({ mouseX = 0, mouseY = 0, scrollProgress = 0, reducedMotion
 function SceneLightingRig({ enableShadows = true }: { enableShadows?: boolean }) {
   return (
     <>
-      <ambientLight color={LIGHTING.ambient.color} intensity={LIGHTING.ambient.intensity} />
+      <ambientLight color={LIGHTING.ambient.color} intensity={LIGHTING.ambient.intensity + 0.25} />
+      <directionalLight
+        color={0xffffff}
+        intensity={2.4}
+        position={[4, 6, 6]}
+        castShadow={enableShadows}
+      />
       <spotLight
         color={LIGHTING.key.color}
         intensity={LIGHTING.key.intensity}
@@ -297,7 +324,7 @@ function SceneLightingRig({ enableShadows = true }: { enableShadows?: boolean })
       />
       <pointLight
         color={LIGHTING.fill.color}
-        intensity={LIGHTING.fill.intensity}
+        intensity={LIGHTING.fill.intensity + 0.5}
         position={LIGHTING.fill.position as [number, number, number]}
       />
       <spotLight
@@ -307,8 +334,13 @@ function SceneLightingRig({ enableShadows = true }: { enableShadows?: boolean })
       />
       <pointLight
         color={LIGHTING.accentPoint.color}
-        intensity={LIGHTING.accentPoint.intensity}
+        intensity={LIGHTING.accentPoint.intensity + 0.8}
         position={LIGHTING.accentPoint.position as [number, number, number]}
+      />
+      <pointLight
+        color={0xe7c376}
+        intensity={1.2}
+        position={[-3, -1, 3]}
       />
       <fogExp2 attach="fog" args={[FOG.color, FOG.density]} />
     </>
@@ -328,8 +360,10 @@ function SceneContents({
   mouseY: number;
   scrollProgress: number;
 }) {
-  const filamentCount = reducedMotion ? 0 : perf.maxFilaments;
-  const particleCount = reducedMotion ? 0 : perf.maxParticles;
+  // SEMPRE rendiamo tutto; reducedMotion spegne solo le animazioni (non gli oggetti)
+  const filamentCount = Math.max(1, reducedMotion ? Math.max(1, Math.round(perf.maxFilaments / 2)) : perf.maxFilaments);
+  const particleCount = reducedMotion ? Math.max(25, Math.round(perf.maxParticles * 0.4)) : perf.maxParticles;
+  const showEnv = perf.level !== 'low';
 
   return (
     <>
@@ -361,14 +395,14 @@ function SceneContents({
       />
       <ContactShadows
         position={[0, -2.5, 0]}
-        opacity={0.35}
-        scale={24}
-        blur={3.2}
-        far={8}
-        resolution={512}
+        opacity={0.4}
+        scale={26}
+        blur={3.6}
+        far={9}
+        resolution={perf.level === 'high' ? 512 : 256}
         color="#0a0616"
       />
-      {perf.level === 'high' && (
+      {showEnv && (
         <Environment preset="night" />
       )}
     </>
@@ -392,10 +426,13 @@ export function ImmersiveScene({ className = '' }: { className?: string }) {
         const c = document.createElement('canvas');
         const ok = !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl') || c.getContext('experimental-webgl')));
         if (typeof window !== 'undefined') {
-          console.debug('[ImmersiveScene] WebGL support detected:', ok);
+          console.info('[ImmersiveScene] WebGL support:', ok);
         }
         setWebglOk(ok);
-      } catch {
+      } catch (e) {
+        if (typeof window !== 'undefined') {
+          console.error('[ImmersiveScene] WebGL check exception:', e);
+        }
         setWebglOk(false);
       }
     }, 0);
@@ -405,33 +442,70 @@ export function ImmersiveScene({ className = '' }: { className?: string }) {
     };
   }, []);
 
+  // Listener SEMPRE attivi — anche su low-end e reduced-motion, le animazioni saranno più lente ma la scena risponde
   useEffect(() => {
-    if (reducedMotion || perf.level === 'low') return;
-
+    let mmCount = 0;
+    let lastMmLog = 0;
     const onMouseMove = (e: MouseEvent) => {
-      setMouseX((e.clientX / window.innerWidth) * 2 - 1);
-      setMouseY(-((e.clientY / window.innerHeight) * 2 - 1));
+      const nx = (e.clientX / window.innerWidth) * 2 - 1;
+      const ny = -((e.clientY / window.innerHeight) * 2 - 1);
+      setMouseX(nx);
+      setMouseY(ny);
+      mmCount++;
+      const now = performance.now();
+      if (now - lastMmLog > 1500 && typeof window !== 'undefined') {
+        console.debug('[ImmersiveScene] mousemove fired. normalized:', { mouseX: nx.toFixed(3), mouseY: ny.toFixed(3), eventsInWindow: mmCount });
+        lastMmLog = now;
+        mmCount = 0;
+      }
     };
 
     const onScroll = () => {
       const scrollY = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress(docHeight > 0 ? Math.min(scrollY / docHeight, 1) : 0);
+      const p = docHeight > 0 ? Math.min(scrollY / docHeight, 1) : 0;
+      setScrollProgress(p);
+    };
+
+    let lastScrollLog = 0;
+    const onScrollLogThrottled = () => {
+      onScroll();
+      const now = performance.now();
+      if (now - lastScrollLog > 2000 && typeof window !== 'undefined') {
+        console.debug('[ImmersiveScene] scroll progress:', scrollProgress.toFixed(3));
+        lastScrollLog = now;
+      }
     };
 
     window.addEventListener('mousemove', onMouseMove, { passive: true });
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onScrollLogThrottled, { passive: true });
     onScroll();
+
+    // Log periodico dello stato interno
+    const intervalId = window.setInterval(() => {
+      if (typeof window !== 'undefined') {
+        console.debug('[ImmersiveScene] snapshot (every 3s):', {
+          mouseX: mouseX.toFixed(3),
+          mouseY: mouseY.toFixed(3),
+          scrollProgress: scrollProgress.toFixed(3),
+          reducedMotion,
+          perfLevel: perf.level,
+          canvasMounted,
+        });
+      }
+    }, 3000);
 
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('scroll', onScrollLogThrottled);
+      window.clearInterval(intervalId);
     };
-  }, [reducedMotion, perf.level]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!webglOk) {
     if (typeof window !== 'undefined') {
-      console.warn('[ImmersiveScene] WebGL not available, showing fallback');
+      console.warn('[ImmersiveScene] WebGL non disponibile — visualizzo fallback statico.');
     }
     return <SceneFallback />;
   }
@@ -440,49 +514,62 @@ export function ImmersiveScene({ className = '' }: { className?: string }) {
     <div
       className={`absolute inset-0 w-full h-full block ${className}`}
       style={{
-        pointerEvents: 'none',
-        opacity: canvasMounted ? 1 : 0,
+        opacity: 1,
         transition: 'opacity 0.6s ease-out',
+        outline: '2px solid rgba(139,92,246,0.28)',
+        outlineOffset: '-2px',
+        boxShadow: 'inset 0 0 60px rgba(139,92,246,0.10)',
       }}
       data-immersive-scene
     >
       <SceneErrorBoundary fallback={<SceneFallback />}>
         <Suspense fallback={<SceneLoader />}>
-            <Canvas
-              dpr={[1, perf.pixelRatio]}
-              gl={{
-                antialias: perf.level === 'high',
-                alpha: true,
-                powerPreference: perf.level === 'low' ? 'low-power' : 'high-performance',
-                stencil: false,
-                depth: true,
-                failIfMajorPerformanceCaveat: false,
-              }}
-              camera={{ fov: 45, position: [0, 0, 12], near: 0.1, far: 200 }}
-              frameloop={reducedMotion ? 'demand' : 'always'}
-              onCreated={() => {
-                setCanvasMounted(true);
-                if (typeof window !== 'undefined') {
-                  console.debug('[ImmersiveScene] Canvas mounted successfully');
-                }
-              }}
-              style={{
-                background: 'transparent',
-                width: '100%',
-                height: '100%',
-                display: 'block',
-              }}
-              data-canvas-debug
-            >
-              <SceneContents
-                perf={perf}
-                reducedMotion={reducedMotion}
-                mouseX={mouseX}
-                mouseY={mouseY}
-                scrollProgress={scrollProgress}
-              />
-            </Canvas>
-          </Suspense>
+          <Canvas
+            key="immersive-canvas"
+            dpr={[1, perf.pixelRatio]}
+            gl={{
+              antialias: true,
+              alpha: true,
+              powerPreference: 'high-performance',
+              stencil: false,
+              depth: true,
+              failIfMajorPerformanceCaveat: false,
+              preserveDrawingBuffer: false,
+            }}
+            camera={{ fov: 50, position: [0, 0, 12], near: 0.1, far: 500 }}
+            frameloop="always"
+            onCreated={({ gl, scene, camera, size }) => {
+              setCanvasMounted(true);
+              // Clear color trasparente — gli elementi HTML dietro si vedono
+              gl.setClearColor(0x000000, 0);
+              scene.background = null;
+              if (typeof window !== 'undefined') {
+                console.info('[ImmersiveScene] Canvas CREATO con successo. Size:', size.width, 'x', size.height, 'Camera:', camera.position.toArray());
+              }
+            }}
+            style={{
+              background: 'transparent',
+              width: '100%',
+              height: '100%',
+              display: 'block',
+              touchAction: 'none',
+            }}
+            onError={(event) => {
+              if (typeof window !== 'undefined') {
+                console.error('[ImmersiveScene] Canvas onError:', event);
+              }
+            }}
+            data-canvas-debug
+          >
+            <SceneContents
+              perf={perf}
+              reducedMotion={reducedMotion}
+              mouseX={mouseX}
+              mouseY={mouseY}
+              scrollProgress={scrollProgress}
+            />
+          </Canvas>
+        </Suspense>
       </SceneErrorBoundary>
     </div>
   );
