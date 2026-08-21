@@ -1,5 +1,5 @@
 // Utility per performance check, adaptive quality e supporto WebGL/scenario
-def isWebGLAvailable(): boolean {
+export function isWebGLAvailable(): boolean {
   try {
     const canvas = document.createElement('canvas');
     return !!(
