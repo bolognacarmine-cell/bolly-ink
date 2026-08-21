@@ -220,17 +220,14 @@ export function Hero3D({ className }: Hero3DProps) {
         inkMaterialRef.current = inkMaterial;
 
         for (let i = 0; i < filamentCount; i++) {
-          // Create curved path for filament
-          const curve = new THREE.CatmullRomCurve3([
-            new THREE.Vector3(-8, (i - filamentCount / 2) * 2, -2),
-            new THREE.Vector3(-4, (i - filamentCount / 2) * 2 + Math.sin(i) * 1, -1),
-            new THREE.Vector3(0, (i - filamentCount / 2) * 2 + Math.cos(i) * 1, 0),
-            new THREE.Vector3(4, (i - filamentCount / 2) * 2, 1),
-            new THREE.Vector3(8, (i - filamentCount / 2) * 2, 2)
-          ]);
+          // Filament positioned along Y with small noise
+          const yBase = (i - filamentCount / 2) * 2 + (Math.sin(i * 0.9) + Math.cos(i * 0.7)) * 1.1;
+          const zRot = (Math.sin(i * 0.4) + Math.cos(i * 0.6)) * 0.06;
 
-          const tubeGeometry = new THREE.TubeGeometry(curve, 64, 0.02, 8, false);
+          const tubeGeometry = new THREE.CylinderGeometry(0.02, 0.02, 20, 8, 1, false);
           const filament = new THREE.Mesh(tubeGeometry, inkMaterial);
+          filament.position.set(0, yBase, (i / filamentCount - 0.5) * 2);
+          filament.rotation.set(0, 0, Math.PI / 2 + zRot);
           filamentsGroup.add(filament);
         }
 

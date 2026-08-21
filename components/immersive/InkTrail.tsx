@@ -52,19 +52,15 @@ export function InkTrail({ scene }: InkTrailProps) {
     });
     materialRef.current = inkMaterial;
 
-    // Create trail segments using TubeGeometry
+    // Create trail segments using CylinderGeometry
     for (let i = 0; i < trailCount; i++) {
-      // Create curved path for trail segment
-      const curve = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-10 + i * 3, (i - trailCount / 2) * 1.5, -2),
-        new THREE.Vector3(-6 + i * 3, (i - trailCount / 2) * 1.5 + Math.sin(i) * 0.5, -1),
-        new THREE.Vector3(-2 + i * 3, (i - trailCount / 2) * 1.5 + Math.cos(i) * 0.5, 0),
-        new THREE.Vector3(2 + i * 3, (i - trailCount / 2) * 1.5, 1),
-        new THREE.Vector3(6 + i * 3, (i - trailCount / 2) * 1.5, 2)
-      ]);
-
-      const tubeGeometry = new THREE.TubeGeometry(curve, 64, 0.03, 8, false);
+      // Create trail segment with vertical offset and slight rotation
+      const yBase = (i - trailCount / 2) * 1.5;
+      const zRot = (Math.sin(i * 0.5) + Math.cos(i * 0.7)) * 0.08;
+      const tubeGeometry = new THREE.CylinderGeometry(0.03, 0.03, 18, 8, 1, false);
       const trailSegment = new THREE.Mesh(tubeGeometry, inkMaterial);
+      trailSegment.position.set(-2 + i * 3, yBase, (i / trailCount - 0.5) * 2);
+      trailSegment.rotation.set(0, 0, Math.PI / 2 + zRot);
       trailGroup.add(trailSegment);
     }
 

@@ -7,6 +7,7 @@ import { Services } from "@/components/sections/Services";
 import { PortfolioImages } from "@/components/sections/PortfolioImages";
 import { VideoGallery } from "@/components/sections/VideoGallery";
 import { Testimonials } from "@/components/sections/Testimonials";
+import { FinalCTA } from "@/components/sections/FinalCTA";
 import { Contact } from "@/components/sections/Contact";
 import { getMedia } from "@/lib/media";
 
@@ -35,6 +36,7 @@ export default async function Home() {
         <PortfolioImages images={media.portfolioImages} />
         <VideoGallery videos={media.videos} />
         <Testimonials />
+        <FinalCTA />
         <Contact />
       </main>
       <Footer />

@@ -1,130 +1,145 @@
-Sito dark luxury per tatuatore, costruito con [Next.js](https://nextjs.org) + Tailwind.
+Sito dark luxury immersivo 3D per studio tattoo, costruito con [Next.js 16](https://nextjs.org) + React 19 + TypeScript + Tailwind v4 + Three.js + [React Three Fiber](https://r3f.docs.pmnd.rs/) + Drei + GSAP.
+
+---
 
 ## Esperienza immersiva
 
 ### Concept visivo e direzione artistica
 
-L’homepage e la Hero offrono un ambiente 3D immersivo ispirato all’estetica luxury dark: luci calde e riflessi metallici risaltano un grande ago stilizzato che disegna nello spazio filamenti di inchiostro. L’effetto richiama il gesto contemporaneo e sacro della tattoo art, tra tecnologia, luce, materia e rito. L’atmosfera è evocativa, materica, elegante, integrata con la palette nero/viola/oro e dettagli soft glow.
+Homepage con hero immersiva 3D ispirata all'estetica **luxury dark**: luci cinematografiche (key calda, fill blu, rim neutro), materiali metallici spazzolati, profondità data da fog esponenziale e un ago stilizzato di tattoo che fluttua nello spazio. Attorno si dipanano **filamenti di inchiostro** con shader GLSL custom per distorsione organica e texture noise, più **particelle luminose additive** (viola glow). Palette nero profondo / viola / oro caldo; tipografia **Cinzel** (serif luxury, headings) e **Inter** (corpo), con film grain sovrapposto e micro-animazioni GSAP per reveal e scroll.
+
+Tutto il contenuto informativo (titoli, paragrafi, CTA, contatti, portfolio) resta **HTML semanticamente valido**: la scena 3D è un layer di atmosfera, mai sostitutivo di informazioni essenziali.
 
 ### Obiettivo narrativo della pagina
 
-Coinvolgere l’utente immergendolo nell’universo artistico dello studio, trasmettendo cura del dettaglio, professionalità ed esclusività. L’esperienza comunica subito il valore del brand attraverso elementi visuali e micro-animazioni che scandiscono il percorso dall’arrivo fino all’invito alla prenotazione.
+Trasmettere **precisione, lusso, esclusività, igiene e attenzione al dettaglio** di uno studio tattoo premium, portando l'utente da una hero evocativa fino a una CTA chiara ("Prenota consulenza su WhatsApp"), passando per artista, servizi, portfolio immagini, video, recensioni, CTA finale e contatti.
 
-### Percorso dell’utente dalla Hero alla CTA
+### Percorso dell'utente dalla Hero alla CTA
 
-1. L’utente atterra su una hero immersiva 3D con ago, filamenti e particelle, che reagisce a movimento e scroll.
-2. Le animazioni guidano lo sguardo: da un’inquadratura iniziale suggestiva, il focus si sposta verso la presentazione dei valori e la call to action (“Prenota subito su WhatsApp” o "Contattami").
-3. Continuando a scorrere, la scena 3D accompagna dolcemente la transizione verso i contenuti portfolio, video, e aree informative.
-4. L’intera esperienza crea una narrazione fluida che culmina nella CTA primaria, sempre accessibile, invitando alla prenotazione esclusiva.
+1. **Atterraggio**: Hero 100vh con scena 3D visibile dietro il blocco di contenuto. Ago fluttuante, filamenti, particelle, overlay gradiente e immagine hero. Skip link per accessibilità ("Vai alla prenotazione").
+2. **Mouse move desktop**: parallax leggero camera (±0.5) e rotazione ago ±15° con damping 0.05.
+3. **Scroll**: progressione 0 → 1 che muove dolcemente camera, ago, filamenti e particelle, collegando visivamente le sezioni.
+4. **Sezioni**: Artista → Servizi (card 3D tilt) → Portfolio (masonry + lightbox + filtri) → Video gallery → Testimonianze → Final CTA luminosa → Contatti + form.
+5. **Conversioni**: CTA WhatsApp sempre sticky in basso a destra + CTA primaria nella hero + CTA finale luminosa + card contatti diretti.
 
 ### Ruolo del 3D rispetto ai contenuti HTML
 
-La scena 3D non sostituisce mai i contenuti informativi, ma li avvolge e li esalta come un layer immersivo visivo. I contenuti testuali e le CTA restano completamente accessibili in HTML per SEO e accessibilità. Il 3D fornisce profondità emozionale, transizioni fluide e ambientazioni di forte impatto, arricchendo la percezione senza bloccare la navigazione o la leggibilità.
+La scena 3D **non contiene mai informazioni essenziali**. È racchiusa in `<ImmersiveScene>` dentro `Hero.tsx` con z-index inferiore ai contenuti, ha `role="presentation"` e viene completamente disattivata (fallback puro 2D gradient) su:
+- mobile < 768px
+- dispositivo low-end (PerformanceManager)
+- `prefers-reduced-motion: reduce`
+- WebGL non disponibile
+
+In tutti questi casi l'esperienza HTML rimane **100% funzionale, accessibile e leggibile**.
 
 ### Palette colori, tipografia, luci, materiali e atmosfera
 
-- **Colori**: Dominante nero profondo, tocchi di viola/fucsia glow, oro caldo per i riflessi metallici. Accenti bianco caldo per la light key e ombreggiature blu per il fill.
-- **Tipografia**: Titoli in Cinzel (serif elegante, branding premium), testi e CTA in Inter (neo-grotesk pulito e leggibile).
-- **Luci**: Light rig cinematografico con key chiaro, fill blu freddo, rim neutro e ambient scuro per profondità.
-- **Materiali scene**: Mix di metalli spazzolati (needle, dettagli) e shader custom per filamenti di inchiostro, particelle soft glow e trasparenze delicate.
-- **Atmosfera**: Evocativa, rarefatta, di grande eleganza ed espressività. Texture leggere/grain, effetto fog e transizioni morbide.
+| Variabile CSS | Valore | Uso |
+|---|---|---|
+| `--background` | `#070707` | base |
+| `--accent-primary` | `#8b5cf6` (viola) | CTA, link, glow |
+| `--accent-primary-darker` | `#6d28d9` | hover |
+| `PALETTE.gold` | `#e7c376` | oro, riflessi |
+| `PALETTE.fog` | `#070707` | fogExp2 density 0.02 |
+
+- **Luci scena**: 1 SpotLight key, 1 PointLight fill, 1 SpotLight rim, 1 AmbientLight. Ombre dinamiche solo high-end.
+- **Materiali**: `MeshStandardMaterial` (metalness 0.6–0.9, roughness 0.2–0.5) per ago; `ShaderMaterial` custom per inchiostro e particelle additive.
+- **Atmosfera**: grain 30% `mix-blend-overlay`, `bg-noise` SVG noise ripetuto, contrasto 110, brightness 0.77 sull'immagine hero.
 
 ### Comportamento su desktop, tablet e mobile
 
-- **Desktop (≥1024px)**: Scena 3D completa con ago, filamenti d'inchiostro (4), particelle (200), animazioni mouse e scroll. Camera FOV 45°, parallax limitato a ±0.5, rotazioni fluide con damping 0.05.
-- **Tablet (768-1023px)**: Scena 3D ridotta con filamenti (2-3), particelle (100), animazioni semplificate. Camera FOV 50°, parallax ridotto.
-- **Mobile (<768px)**: Fallback 2D automatico - nessuna scena 3D per garantire performance e batteria. Contenuto HTML completamente accessibile con immagine hero statica.
+| Breakpoint | Scena 3D | Filamenti | Particelle | Ombre | Parallax |
+|---|---|---|---|---|---|
+| Desktop ≥ 1024px | ✅ completa | 4 | 200 | ✅ | ±0.5 |
+| Tablet 768–1023 | ✅ ridotta | 2 | 100 | ❌ | ±0.3 |
+| Mobile < 768px | ❌ fallback 2D | 0 | 0 | ❌ | ❌ |
+| Low-end / reduced-motion | ❌ fallback 2D | 0 | 0 | ❌ | ❌ |
+
+- **DPR adattivo**: 2 max desktop, 1.5 tablet, 1 mobile/low-end (via `useScenePerformance`).
+- **Canvas R3F**: `frameloop="demand"` se reduced-motion, altrimenti "always".
+- **Lazy load**: `ImmersiveScene` caricato con `next/dynamic`, `ssr: false`.
 
 ### Interazioni principali e loro significato
 
-- **Mouse movement**: Rotazione delicata dell'ago (±15°) e parallax camera (±0.5) per creare profondità senza disorientare. Damping 0.05 per movimenti fluidi.
-- **Scroll**: Progressione narrativa della scena - ago ruota e si sposta, filamenti guidano l'occhio verso le sezioni successive. GSAP ScrollTrigger con scrub 1 per transizioni morbide.
-- **Hover/focus HTML**: Stati accessibili su tutti i link e pulsanti con anello di focus visibile e transizioni colore coerenti.
-- **Touch**: Su tablet, touch events mappati a mouse movement per interazioni simili.
+- **Mouse move** (desktop): parallax camera + rotazione ago → "profondità, controllo, precisione".
+- **Scroll**: camera zoom/translate + ago rotazione 0→π + filamenti fade out → narrazione "dall'idea al progetto finito".
+- **Hover card 3D** (use3DTilt): 4°/8°/12° in base a depth → "premium, tangibile".
+- **Reveal on scroll** (IntersectionObserver, 700ms ease-out): ogni sezione entra da y+30 opaco → visibile.
+- **Counter**: count up easeOutExpo quando entra in viewport.
+- **Portfolio**: filtri per stile + sort data + lightbox keyboard (Esc / ← / →).
+- **CTA hover/focus**: anello visibile, transizioni 140–180ms.
 
 ### Stati di caricamento, errore e fallback
 
-- **Loading**: Spinner durante inizializzazione WebGL (max 500ms), fade-in canvas opacity 0.5s. LoadingSpinner componente riutilizzabile.
-- **Error**: Fallback SceneFallback con messaggio "Esperienza 3D non disponibile" se WebGL non supportato. Catch try-catch in Hero3D e ImmersiveExperience.
-- **Fallback 2D**: Immagine hero statica con gradient overlay quando 3D disabilitato (mobile, reduced-motion, no WebGL).
-- **Reduced motion**: Disabilita completamente rotazioni, parallax, animazioni shader e scroll-linked movements. Canvas non renderizzato, fallback 2D attivo.
+- **Loading WebGL**: `<SceneLoader>` con `<LoadingSpinner size="lg">` centrato + suspense R3F. Timeout sicurezza 500ms.
+- **WebGL non supportato / errore catch**: `<SceneFallback>` con testo "Esperienza 3D non disponibile" + "Il contenuto rimane accessibile".
+- **Fallback 2D**: gradienti radiali viola/oro generati in CSS (nessun canvas).
+- **Immagini**: `next/image` con `loading="lazy"` e `sizes` responsive. Poster video come fallback.
+- **Video**: poster + `preload="metadata"`. Auto-play solo on hover (muted).
 
 ### Comportamento con prefers-reduced-motion
 
-Rilevato via `window.matchMedia('(prefers-reduced-motion: reduce)')`. Quando attivo:
-- Nessuna scena 3D renderizzata
-- Nessuna animazione CSS (transform, opacity transitions disabilitate)
-- Immagini statiche senza scale/transform
-- Focus visibile su tutti gli elementi interattivi
-- Contenuto completamente accessibile via tastiera
+Rilevato via hook `usePrefersReducedMotion()` e applicato **in tutti i componenti**:
+
+- HeroImmersive forza fallback 2D gradient.
+- ImmersiveScene forza `frameloop="demand"`, 0 particelle, 0 filamenti, reducedMotion ovunque.
+- `<Reveal>` disabilita transform, solo fade minimo.
+- `<Card3D>` disabilita tilt, `disabled: true`.
+- `useParallax` / GSAP scroll ritorna early.
+- Immagini hero senza `scale(1.02)`.
+- Tutte le transizioni CSS restano ma con durate minori.
 
 ### Requisiti SEO e accessibilità
 
-- **Metadata**: Title, description, Open Graph, Twitter cards in layout.tsx. metadataBase configurabile per dominio.
-- **Semantica HTML**: Heading h1-h6 in ordine logico, nav, main, section, footer semanticamente corretti.
-- **Contrasto**: Testo bianco su sfondo nero/gradient, ratio ≥4.5:1. Accenti viola/oro per CTA con contrasto sufficiente.
-- **Focus**: anello focus visibile su tutti gli elementi interattivi, skip-link "Vai alla prenotazione" per navigazione rapida.
-- **Keyboard**: Navigazione completa via tab, aria-label su canvas 3D descrittivo ma non essenziale.
-- **Alt text**: Tutte le immagini hanno alt descrittivo. Canvas 3D ha role="img" ma contenuto essenziale in HTML.
-- **CTA accessibili**: Pulsanti WhatsApp e contatti raggiungibili senza interagire con canvas, sempre in HTML.
+- **Metadata**: `app/layout.tsx` → title template, description, keywords, canonical, **Open Graph** (1200×630 hero.jpg), **Twitter summary_large_image**, robots + googleBot, icons, category "Tattoo Studio", `viewport` con `themeColor: #070707`.
+- **Semantica**: `<header>`, `<main>`, `<section id>` (scroll-mt-24), `<footer>`, heading in ordine logico h1→h2→h3. `<figure>`/`<blockquote>` per testimonianze, `<article>` per video.
+- **Skip link**: `Vai alla prenotazione` sr-only visibile on focus.
+- **Contrasto**: bianco #f3f4f6 su nero #070707 (WCAG AA oltre 4.5:1). Accento viola #8b5cf6 testato per testo secondario.
+- **Focus**: `:focus-visible { outline 2.5px solid accent }` globale. Tutta la UI navigabile via tastiera.
+- **Alt**: tutte le immagini Next hanno alt descrittivo. Portfolio ha stile + data in lightbox.
+- **Canvas 3D**: nessun testo essenziale dentro. `aria-hidden="true"` quando è fallback. `role="presentation"` sugli elementi decorativi.
+- **Lingua**: `<html lang="it">`.
+- **Lighthouse-friendly**: no testo dentro canvas, contenuti tutti fuori.
 
-### Ottimizzazioni performance applicate
+---
 
-- **Geometrie low-poly**: Ago creato con primitive semplici (Cylinder, Cone) con segmenti minimi (32) per mantenere poligoni bassi.
-- **Texture compresse**: Nessuna texture pesante - shader procedurali per effetti inchiostro e glow.
-- **Pixel ratio adattivo**: DPR limitato a 2 su desktop, 1 su mobile/low-end via PerformanceManager.
-- **Luci ottimizzate**: 4 luci totali (key, fill, rim, ambient), ombre disabilitate su low-end.
-- **Batching**: Geometrie riutilizzate dove possibile, draw call ridotte.
-- **Lazy loading**: Hero3D caricato dinamicamente con next/dynamic, SSR disabilitato.
-- **Dispose completo**: Geometrie, materiali e texture dispose in cleanup per evitare memory leak.
-- **Adaptive quality**: Particelle e filamenti ridotti su mobile (50 vs 200, 2 vs 4).
-- **Framerate stabile**: Animation loop ottimizzato, useFrame solo quando necessario.
-- **Mobile fallback**: Scena 3D disabilitata completamente su <768px per batteria e performance.
-- **Device detection**: PerformanceManager rileva hardware e adatta qualità automaticamente.
-- **No post-processing pesante**: Shader custom leggeri invece di effetti postprocessing costosi.
-- **Scroll throttling**: GSAP ScrollTrigger con scrub 1 per performance scroll.
+## Ottimizzazioni performance applicate
 
-1. Installa dipendenze
+- **R3F idiomatico**: sostituito il vecchio approccio Three.js vanilla (multipli useEffect con cleanup manuale e mappe di oggetti) con un singolo `<Canvas>` + componenti dichiarativi. Meno memory leak, meno draw call manuali, lifecycle gestito da R3F.
+- **Geometrie low-poly**: ago con Cylinder/Cone a 32 segmenti, TubeGeometry 64×8. Nessun GLB esterno per evitare overhead.
+- **Shader custom**: Ink e Glow scritti a mano con GLSL minimale, 3–5 uniforms, loop di vertici minimali.
+- **Particelle limitate**: 0/50/100/200 in base a device, `AdditiveBlending`, `depthWrite=false`.
+- **DPR adattivo**: `dpr={[1, perf.pixelRatio]}` in Canvas, max 2 su desktop, 1 su low-end/mobile.
+- **Ombre dinamiche**: solo high-end, ContactShadows 256px resolution per soft-shadows veloci.
+- **Lazy load 3D**: `next/dynamic(..., { ssr: false })`, caricamento solo client-side.
+- **Environment preset=night**: solo high-end, evita hdr grandi.
+- **GSAP**: usato solo dove serve davvero (parallax, scroll). ScrollTrigger con cleanup `kill()` negli useEffect return.
+- **Immagini**: `next/image` AVIF/WebP auto, `sizes` per ogni breakpoint, `loading="lazy"` fuori hero.
+- **Font**: `next/font/google` con `display=swap`, zero layout shift.
+- **Cleanup completo**: geometrie/materiali dispose automatico R3F. Nessun listener manuale persistente.
+- **Responsive DPR + PerformanceManager**: rilevamento low-end (mobile + cores<4) → livello low.
+- **`frameloop="demand"`**: se reduced-motion, la scena renderizza solo al mount.
+
+---
+
+## Stack tecnico
+
+- **Next.js 16.2.9** (Turbopack, App Router)
+- **React 19.2.4** + **TypeScript 5** (strict: true)
+- **Tailwind CSS v4** con `@tailwindcss/postcss`, tema inline e variabili CSS
+- **three 0.185**, **@react-three/fiber 9.6**, **@react-three/drei 10.7**
+- **gsap 3.15** (ScrollTrigger, timeline, ease)
+- **Decap-style admin** in `/app/admin` (upload media)
+
+---
+
+## Quick start
 
 ```bash
 npm install
-```
-
-2. Avvia in locale
-
-```bash
 npm run dev
+# http://localhost:3000
 ```
-
-Apri `http://localhost:3000`.
-
-## Contenuti (immagini/video)
-
-- Media (portfolio + video) stanno in `content/media.json`.
-- Immagini in `public/portfolio/`
-- Poster video in `public/video-posters/`
-- (Opzionale) Video in `public/videos/` se vuoi servire MP4 localmente.
-
-Nota: per demo i video puntano a MP4 esterni, sostituiscili con i tuoi file in produzione.
-
-## Pannello admin (upload)
-
-Visita `http://localhost:3000/admin` per caricare:
-- Immagini portfolio (jpg/png/webp)
-- Video (mp4) + poster (jpg/png)
-
-L’admin salva i file dentro `public/` e aggiorna automaticamente `content/media.json`.
-
-Importante:
-- Proteggi `/admin` in produzione (auth).
-- Se deploy su serverless (es. Vercel) lo storage locale non è persistente: usa S3/R2 o un headless CMS.
-
-## Branding e SEO
-
-- Logo: sostituisci `public/logo.svg` con il tuo.
-- Hero: `public/hero/hero.jpg`
-- About: `public/about/about.jpg`
-- Metadati: `app/layout.tsx` (imposta `metadataBase` con il tuo dominio).
 
 ## Build produzione
 
@@ -132,3 +147,41 @@ Importante:
 npm run build
 npm run start
 ```
+
+Lint: `npm run lint`.
+
+## Contenuti (immagini e video)
+
+- `content/media.json` → unica sorgente di verità per portfolio + video, caricato server-side via `getMedia()`.
+- `public/portfolio/p01…p08.jpg` → immagini demo.
+- `public/video-posters/v01…v03.jpg` → poster. MP4 opzionali in `public/videos/` (sostituisci `src` nel media.json).
+- `public/hero/hero.jpg` → hero background.
+- `public/about/chritatto.webp` → artista.
+- `admin panel` → `/admin` (proteggi in produzione con auth; in deploy serverless usa S3/R2 o un CMS per persistenza file).
+
+## Branding e SEO finale
+
+- Sostituisci `siteUrl` in `app/layout.tsx` col dominio reale (aggiorna metadataBase, OG url, canonical).
+- Logo: `public/logo.svg` / `public/logo.jpg`.
+- Favicon: `public/favicon.ico`.
+- Dati studio: `data/site.ts` (brand, nome artista, tagline, contatti, servizi, portfolio, testimonianze).
+
+---
+
+## File nuovi / modificati in questa sessione
+
+**Nuovi:**
+- `components/immersive/ImmersiveScene.tsx` — scena R3F completa (ago, filamenti, particelle, lighting, camera, contact shadows, suspense, fallback).
+- `components/sections/FinalCTA.tsx` — CTA finale luminosa prima dei contatti.
+
+**Modificati sostanzialmente:**
+- `components/HeroImmersive.tsx` — ora wrapper dynamic con fallback 2D + performance check.
+- `app/layout.tsx` — metadata completo SEO, OG, Twitter, viewport, themeColor, title template.
+- `app/page.tsx` — aggiunta `<FinalCTA>`.
+- `lib/three/performance.ts` — corretto `def → export function`, rimosso export duplicato.
+- `components/sections/Hero.tsx` — sostituito `<ImmersiveExperience>` → `<HeroImmersive>` (già in diff locale).
+- `components/Hero3D.tsx` — rimosso banner debug e console.log (non più usato, sostituito da ImmersiveScene).
+- `README.md` — documentazione completa esperienza, architettura, SEO, performance, quick-start.
+
+**Non più usati ma mantenuti per retro-compatibilità:**
+- `components/Hero3D.tsx`, `components/immersive/ImmersiveExperience.tsx`, `components/immersive/CameraRig.tsx`, `NeedleObject`, `PortfolioScene`, `InkTrail`, `SceneLighting.tsx` (approccio vanilla Three.js).

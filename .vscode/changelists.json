@@ -1,0 +1,15 @@
+{
+  "changelists": [
+    {
+      "name": "Default",
+      "files": [
+        "README.md",
+        ".vscode/changelists.json",
+        "components/sections/Hero.tsx",
+        "components/HeroImmersive.tsx",
+        "components/Hero3D.tsx"
+      ]
+    }
+  ],
+  "active": "Default"
+}

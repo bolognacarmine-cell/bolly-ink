@@ -6,17 +6,20 @@ export function isWebGLAvailable(): boolean {
       window.WebGLRenderingContext &&
       (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
     );
-  } catch (e) {
+  } catch {
     return false;
   }
 }
 
+type ExtendedNavigator = Navigator & { deviceMemory?: number };
+
 // Riconoscimento dispositivi "low-end" (ram, pixel ratio, heuristica)
 export function isLowEndDevice(): boolean {
   if (typeof window === 'undefined') return false;
-  const maxMem = (navigator as any).deviceMemory;
+  const nav = navigator as ExtendedNavigator;
+  const maxMem = nav.deviceMemory;
   // Heuristica: mobile, RAM bassa (<3GB), pixelRatio altissimo
-  return window.innerWidth < 500 || maxMem <= 2 || window.devicePixelRatio > 2.5;
+  return window.innerWidth < 500 || (typeof maxMem === 'number' && maxMem <= 2) || window.devicePixelRatio > 2.5;
 }
 
 // Gestione pixelRatio adattivo su device e performance
