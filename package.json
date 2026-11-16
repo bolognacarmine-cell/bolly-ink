@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build:wasm": "node scripts/build-wasm.mjs",
+    "prebuild": "node scripts/build-wasm.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",

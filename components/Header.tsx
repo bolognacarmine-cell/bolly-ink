@@ -19,22 +19,42 @@ export function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
-        <div className="mt-4 rounded-2xl border border-white/10 bg-black/55 backdrop-blur-xl shadow-[0_10px_40px_-25px_rgba(0,0,0,.9)]">
-          <div className="flex items-center justify-between gap-2 px-3 py-3 sm:gap-4 sm:px-5">
+        <div className="group relative mt-4 overflow-hidden rounded-2xl border border-white/10 bg-black/40 backdrop-blur-2xl shadow-[0_12px_50px_-20px_rgba(0,0,0,.95),0_0_0_1px_rgba(139,92,246,0.08)_inset]">
+          {/* Immersive ambient layers */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 opacity-70 [background:radial-gradient(120%_120%_at_0%_0%,rgba(139,92,246,0.18),transparent_45%),radial-gradient(90%_120%_at_100%_0%,rgba(231,195,118,0.12),transparent_40%),linear-gradient(180deg,rgba(255,255,255,0.04),transparent_35%)]"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -inset-x-20 -top-16 h-24 bg-gradient-to-r from-transparent via-white/10 to-transparent blur-2xl motion-safe:animate-[header-sheen_8s_ease-in-out_infinite]"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/5"
+          />
+
+          <div className="relative flex items-center justify-between gap-2 px-3 py-3 sm:gap-4 sm:px-5">
             <a
               href="#top"
               className="min-w-0 flex items-center gap-3 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded-lg"
               aria-label="Torna in alto"
             >
-              <Image
-                src="/logo.jpg"
-                alt={`${site.brand} logo`}
-                width={54}
-                height={54}
-                priority
-                className="rounded-xl object-cover"
-              />
-              <span className="truncate text-sm sm:text-lg font-semibold tracking-[0.14em] sm:tracking-[0.18em] uppercase">
+              <span className="relative">
+                <span
+                  aria-hidden="true"
+                  className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-violet-500/40 via-fuchsia-500/20 to-amber-300/30 blur-md"
+                />
+                <Image
+                  src="/logo.jpg"
+                  alt={`${site.brand} logo`}
+                  width={54}
+                  height={54}
+                  priority
+                  className="relative rounded-xl object-cover ring-1 ring-white/20"
+                />
+              </span>
+              <span className="truncate text-sm sm:text-lg font-semibold tracking-[0.14em] sm:tracking-[0.18em] uppercase drop-shadow-[0_0_18px_rgba(139,92,246,0.35)]">
                 {site.brand}
               </span>
             </a>
@@ -93,14 +113,18 @@ export function Header() {
           </div>
 
           {menuOpen ? (
-            <div className="border-t border-white/10 px-3 pb-3 pt-2 lg:hidden">
-              <nav className="grid gap-2">
+            <div className="relative border-t border-white/10 px-3 pb-3 pt-2 lg:hidden">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 bg-gradient-to-b from-violet-500/10 to-transparent"
+              />
+              <nav className="relative grid gap-2">
                 {nav.map((item) => (
                   <a
                     key={item.href}
                     href={item.href}
                     onClick={() => setMenuOpen(false)}
-                    className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                    className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 transition hover:bg-white/10 hover:text-white hover:border-violet-400/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
                   >
                     {item.label}
                   </a>

@@ -97,3 +97,14 @@ h3 {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");
   background-repeat: repeat;
 }
+
+@keyframes header-sheen {
+  0%, 100% {
+    transform: translateX(-18%) translateY(0);
+    opacity: 0.18;
+  }
+  50% {
+    transform: translateX(18%) translateY(6px);
+    opacity: 0.35;
+  }
+}
