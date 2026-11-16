@@ -45,14 +45,14 @@ export function Hero() {
           alt="Studio tattoo: hero background"
           fill
           priority
-          className="object-cover object-center brightness-[0.55] contrast-110 saturate-70 opacity-40"
+          className="object-cover object-center brightness-[0.7] contrast-105 saturate-[0.8] opacity-55"
           style={{
             transform: prefersReducedMotion ? 'none' : 'scale(1.02)',
             transition: 'transform 0.8s ease-out'
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/75" />
-        <div className="absolute inset-0 opacity-25 mix-blend-overlay bg-noise" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40" />
+        <div className="absolute inset-0 opacity-15 mix-blend-overlay bg-noise" />
       </div>
 
       {/* 3D WebGL Scene - between background and content */}
@@ -67,7 +67,7 @@ export function Hero() {
         onMouseLeave={handleMouseLeave}
       >
         <div
-          className="mx-auto max-w-3xl px-6 py-24 md:py-36 bg-black/60 shadow-xl rounded-2xl backdrop-blur-md border border-white/10 flex flex-col items-center"
+          className="mx-auto max-w-3xl px-6 py-24 md:py-36 flex flex-col items-center"
           style={{
             transformStyle: 'preserve-3d',
             transform: prefersReducedMotion
